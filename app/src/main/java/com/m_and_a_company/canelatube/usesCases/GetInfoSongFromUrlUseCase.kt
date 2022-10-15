@@ -1,0 +1,13 @@
+package com.m_and_a_company.canelatube.usesCases
+
+import com.m_and_a_company.canelatube.domain.repository.song.SongsDataSource
+import com.m_and_a_company.canelatube.network.domain.model.MusicDownloadsModel
+import com.m_and_a_company.canelatube.network.domain.model.ResponseApi
+
+class GetInfoSongFromUrlUseCase(private val songsRepository: SongsDataSource) {
+
+    suspend fun execute(url: String): ResponseApi.Success<MusicDownloadsModel> {
+        return songsRepository.getInfoSongFromUrl(url)
+    }
+
+}

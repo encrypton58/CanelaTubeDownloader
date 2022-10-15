@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Canela Tube</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_music">Música</string>
+    <string name="title_video">Vídeo</string>
+    <string name="no_have_internet_connection">No tienes conexión a internet</string>
+    <string name="download_in_progress">Descarga en progreso</string>
+    <string name="download_success_title">Descarga Exitosa!</string>
+    <string name="permission_denied">Permiso denegado</string>
+
+    <string name="convert_title">Convirtiendo... Espera un momento</string>
+    <string name="download_title">Descargando...</string>
+    <string name="set_info_song_data">%1s</string>
+
+    <string name="permissions_required_title">Permisos requeridos</string>
+    <string name="permissions_required_message">Para poder descargar tus canciones favoritas es necesario el permiso</string>
+    <string name="accept_text_dialog">Aceptar</string>
+    <string name="cancel_text_dialog">Cancelar</string>
+
+    <!-- Vista de descarga de cancion-->
+    <string name="lbl_select_type_question">¿Qué tipo de descarga deseas?</string>
+    <string name="lbl_select_type_video">Video</string>
+    <string name="lbl_select_type_audio">Audio</string>
+    <string name="lbl_select_type_accept">Aceptar</string>
+
+</resources>
