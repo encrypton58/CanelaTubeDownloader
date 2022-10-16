@@ -13,10 +13,6 @@ interface SongsDataSource {
 
     suspend fun getIdSong(url: String, iTag: Int): ResponseApi.Success<SongIdModel>
 
-    suspend fun getInfoVideoFromUtl(url: String): ResponseService
-
-    suspend fun prepareSongToDownload(typeDownload: TypeDownload, url: String, iTag: Int): ResponseService
-
     suspend fun downloadSong(id: Int)
 
     suspend fun finishDownloadSong(songId: Int, listener: DownloadFinishedListener)

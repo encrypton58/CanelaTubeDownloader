@@ -10,8 +10,6 @@ import com.m_and_a_company.canelatube.ui.svdn.SVDNViewModel
 import com.m_and_a_company.canelatube.usesCases.DownloadSongUseCase
 import com.m_and_a_company.canelatube.usesCases.GetIdSongUseCase
 import com.m_and_a_company.canelatube.usesCases.GetInfoSongFromUrlUseCase
-import com.m_and_a_company.canelatube.usesCases.GetInfoVideoFromUrlUseCase
-import com.m_and_a_company.canelatube.usesCases.PrepareSongToDownloadUseCase
 
 object ViewModelFactory {
 
@@ -21,12 +19,7 @@ object ViewModelFactory {
             when {
 
                 modelClass.isAssignableFrom(SVDNViewModel::class.java) -> {
-                    return SVDNViewModel(
-                        providesGetInfoSongFromUrlUseCase(providesSongRepository(context)),
-                        providesGetInfoVideoFromUrlUseCase(providesSongRepository(context)),
-                        providesPrepareSongToDownloadUseCase(providesSongRepository(context)),
-                        providesDownloadSongUseCase(providesSongRepository(context))
-                    ) as T
+                    return SVDNViewModel() as T
                 }
 
                 modelClass.isAssignableFrom(DownloadViewModel::class.java) -> {
@@ -47,14 +40,6 @@ object ViewModelFactory {
 
     private fun providesGetInfoSongFromUrlUseCase(songsRepository: SongsDataSource): GetInfoSongFromUrlUseCase {
         return GetInfoSongFromUrlUseCase(songsRepository)
-    }
-
-    private fun providesGetInfoVideoFromUrlUseCase(songsRepository: SongsDataSource): GetInfoVideoFromUrlUseCase {
-        return GetInfoVideoFromUrlUseCase(songsRepository)
-    }
-
-    private fun providesPrepareSongToDownloadUseCase(songsRepository: SongsDataSource): PrepareSongToDownloadUseCase {
-        return PrepareSongToDownloadUseCase(songsRepository)
     }
 
     private fun providesDownloadSongUseCase(songsRepository: SongsDataSource): DownloadSongUseCase {

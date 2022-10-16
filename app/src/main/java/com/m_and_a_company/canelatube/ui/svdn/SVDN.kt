@@ -81,7 +81,7 @@ class SVDN : AppCompatActivity(), DialogInterface.OnDismissListener {
         when (viewState) {
             is SongInfoUIState.Loading -> {}
             is SongInfoUIState.SuccessToGetInfo -> setSuccessRequestView(viewState.songInfo)
-            is SongInfoUIState.Error -> setErrorRequestView(viewState.error)
+            is SongInfoUIState.Error -> setErrorRequestView()
             is SongInfoUIState.SuccessPrepareToDownload -> setSuccessPrepareToDownload()
             is SongInfoUIState.SuccessToGetInfoVideo -> setSuccessRequestView(viewState.videoInfo)
         }
@@ -92,11 +92,11 @@ class SVDN : AppCompatActivity(), DialogInterface.OnDismissListener {
             when (typeDownload) {
                 TypeDownload.AUDIO -> {
                     initSVDNBottomSheet()
-                    viewModel.getInfoSongFromUrl(urlSong)
+                    viewModel.getInfoSongFromUrl()
                 }
                 TypeDownload.VIDEO -> {
                     initSVDNBottomSheet()
-                    viewModel.getInfoVideoFromUrl(urlSong)
+                    viewModel.getInfoVideoFromUrl()
                 }
                 TypeDownload.UNDEFINED -> {
                     Utils.toastMessage(applicationContext, "No Se ha Seleccionado el tipo de descarga")
@@ -234,7 +234,7 @@ class SVDN : AppCompatActivity(), DialogInterface.OnDismissListener {
 
     }
 
-    private fun setErrorRequestView(error: RequestErrors) {
+    private fun setErrorRequestView() {
         svdnBottomSheetBinding.apply {
             setShimmerHide(true)
             svdnShimmerViewContainerDownFormats.visibility = View.GONE
@@ -246,7 +246,7 @@ class SVDN : AppCompatActivity(), DialogInterface.OnDismissListener {
                 playAnimation()
             }
             changeColorCardBackground(cardContainerText, R.color.canela_variant)
-            svdnTitleAuthorTv.text = Utils.buildMessageError(error)
+            //svdnTitleAuthorTv.text = Utils.buildMessageError(error)
         }
     }
 
@@ -307,7 +307,7 @@ class SVDN : AppCompatActivity(), DialogInterface.OnDismissListener {
             deviceHaveInternetConnection(application).apply {
                 if (this) {
                     if (urlSong.isNotEmpty()) {
-                        viewModel.getInfoSongFromUrl(urlSong)
+                        viewModel.getInfoSongFromUrl()
                         return@OnClickListener
                     }
                 } else {
@@ -329,7 +329,7 @@ class SVDN : AppCompatActivity(), DialogInterface.OnDismissListener {
     private fun onFormatItemClick() = object : FormatsAdapter.OnClickFormatItemListener {
         override fun onClickFormatItem(iTag: Int) {
             setConvertView()
-            viewModel.prepareSongToDownload(iTag)
+            viewModel.prepareSongToDownload()
         }
     }
 

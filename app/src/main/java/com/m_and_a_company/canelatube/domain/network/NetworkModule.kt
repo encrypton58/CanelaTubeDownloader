@@ -1,8 +1,17 @@
 package com.m_and_a_company.canelatube.domain.network
 
 import android.content.Context
+import com.google.gson.Gson
+import okhttp3.ResponseBody
 
 object NetworkModule {
+
+    fun <T> parseErrorResponse(response: ResponseBody?, type: Class<T>) : T? {
+        response?.let { responseBody ->
+            return Gson().fromJson(response.string(), type)
+        }
+        return null
+    }
 
     fun provideNetworkPreferences(ctx: Context): NetworkPreferences {
         return NetworkPreferences(context = ctx)
@@ -10,7 +19,7 @@ object NetworkModule {
 
 }
 
-class NetworkPreferences(private val context: Context) {
+class NetworkPreferences(context: Context) {
 
     private val NAME_NETWORK_PREFERENCES = "network_preferences"
 

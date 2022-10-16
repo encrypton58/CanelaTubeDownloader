@@ -41,12 +41,8 @@
         <service
             android:name=".enviroment.service.FinishedDownloadService"
             android:enabled="true"
-            android:exported="true" />
-        <service
-            android:name=".enviroment.service.DownloadService"
-            android:enabled="true"
-            android:exported="true" />
-
+            android:exported="false" />
+        
         <activity
             android:name=".ui.svdn.SVDN"
             android:exported="false"

@@ -4,10 +4,11 @@ import android.app.DownloadManager
 import android.content.Context
 import android.content.IntentFilter
 import android.net.Uri
+import com.m_and_a_company.canelatube.domain.network.BASE_URL
 import com.m_and_a_company.canelatube.domain.network.CONNECT_TIMEOUT
-import com.m_and_a_company.canelatube.domain.network.DEBUG_URL
 import com.m_and_a_company.canelatube.domain.network.NetworkModule
 import com.m_and_a_company.canelatube.domain.network.WAIT_TIMEOUT
+import com.m_and_a_company.canelatube.domain.network.exceptions.SongException
 import com.m_and_a_company.canelatube.domain.network.interfaces.DownloadFinishedListener
 import com.m_and_a_company.canelatube.enviroment.DownloadBroadcast
 import com.m_and_a_company.canelatube.enviroment.getPathSongs
@@ -18,7 +19,6 @@ import com.m_and_a_company.canelatube.network.interfaces.MusicService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.StringBuilder
 
 class MusicApiService(private val context: Context) {
 
@@ -30,12 +30,13 @@ class MusicApiService(private val context: Context) {
         }
 
         return Retrofit.Builder()
-            .baseUrl(DEBUG_URL)
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient.build())
             .build()
-
     }
+
+    private lateinit var failResponse: ResponseApi.Error
 
     private val mService = buildHttpClient().create(MusicService::class.java)
 
@@ -48,7 +49,8 @@ class MusicApiService(private val context: Context) {
     suspend fun getListDownload(url: String): ResponseApi.Success<MusicDownloadsModel> {
         val result = mService.getMusic(url)
         if(!result.isSuccessful) {
-            throw Exception(result.message())
+            failResponse = NetworkModule.parseErrorResponse(result.errorBody(), ResponseApi.Error::class.java) ?: ResponseApi.Error(2, "Ocurrio un error")
+            throw SongException(failResponse.message!!, failResponse.errors!!)
         }
         return ResponseApi.Success(
             result.body()!!.statusCode,
@@ -79,7 +81,7 @@ class MusicApiService(private val context: Context) {
             IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
         )
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        val request = DownloadManager.Request(Uri.parse("${DEBUG_URL}music/download/$id"))
+        val request = DownloadManager.Request(Uri.parse("${BASE_URL}music/download/$id"))
         NetworkModule.provideNetworkPreferences(context).setIdToDownload(id)
         val extFileSave = NetworkModule.provideNetworkPreferences(context).getExtensionFile()
         val nameFile = NetworkModule.provideNetworkPreferences(context).getNameFile()

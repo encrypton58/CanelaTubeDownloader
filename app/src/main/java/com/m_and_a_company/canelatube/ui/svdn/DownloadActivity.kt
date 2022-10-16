@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import com.airbnb.lottie.LottieDrawable
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.m_and_a_company.canelatube.R
 import com.m_and_a_company.canelatube.controllers.ViewModelFactory
@@ -92,27 +93,30 @@ class DownloadActivity : AppCompatActivity(), OnSelectTypeDownload, DownloadForm
 
 
     private val onChangeView = Observer<DownloadUIState> {
+        loader.dismiss()
         when (it) {
             DownloadUIState.Loading -> TODO()
             is DownloadUIState.Success -> {
-                loader.dismiss()
-                setupBottomSheet(it)
+                setupBottomSheet{setupDataInBottom(it)}
             }
             is DownloadUIState.SuccessGetSongId -> {
                 bottomSheet.setOnDismissListener(null)
                 bottomSheet.dismiss()
                 viewModel.downloadSong(it.song.id)
             }
+            is DownloadUIState.Error -> {
+                setupBottomSheet { setupErrorInBottom(it) }
+            }
         }
     }
 
-    private fun setupBottomSheet(downloadUIState: DownloadUIState.Success) {
+    private fun setupBottomSheet(lambda: () -> Unit) {
         bottomSheet.apply {
             setContentView(bottomSheetBinding.root)
             setOnDismissListener {
                 finishAffinity()
             }
-            setupDataInBottom(downloadUIState)
+            lambda()
             show()
         }
     }
@@ -128,6 +132,20 @@ class DownloadActivity : AppCompatActivity(), OnSelectTypeDownload, DownloadForm
             }
             bsDownloadRv.adapter = adapter
             bsDownloadRv.layoutManager = GridLayoutManager(applicationContext, GRIDS_COLUMNS)
+        }
+    }
+
+    private fun setupErrorInBottom(state: DownloadUIState.Error) {
+        bottomSheetBinding.apply {
+            modalAnimationView.apply {
+                visibility = View.VISIBLE
+                setAnimation(R.raw.error_rabbit)
+                repeatCount = LottieDrawable.INFINITE
+                repeatMode = LottieDrawable.RESTART
+                playAnimation()
+            }
+            bsDownloadTitleAuthorTv.text = state.message
+            Utils.toastMessage(this@DownloadActivity, Utils.buildMessageError(state.errors))
         }
     }
 
@@ -198,7 +216,7 @@ class DownloadActivity : AppCompatActivity(), OnSelectTypeDownload, DownloadForm
 
     /**
      * Escucha el resultado de la solicitud del StorageManager
-     * @param result[ActivityResult] resultado de la actividad
+     * @param activityResult[ActivityResult] resultado de la actividad
      */
     private fun onEnableStorageManagerResult(activityResult: ActivityResult?) {}
 
