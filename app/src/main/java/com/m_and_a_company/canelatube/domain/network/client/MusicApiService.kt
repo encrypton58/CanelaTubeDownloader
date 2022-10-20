@@ -19,6 +19,8 @@ import com.m_and_a_company.canelatube.network.interfaces.MusicService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.net.ConnectException
+import java.net.SocketTimeoutException
 
 class MusicApiService(private val context: Context) {
 
@@ -47,16 +49,24 @@ class MusicApiService(private val context: Context) {
     }
 
     suspend fun getListDownload(url: String): ResponseApi.Success<MusicDownloadsModel> {
-        val result = mService.getMusic(url)
-        if(!result.isSuccessful) {
-            failResponse = NetworkModule.parseErrorResponse(result.errorBody(), ResponseApi.Error::class.java) ?: ResponseApi.Error(2, "Ocurrio un error")
-            throw SongException(failResponse.message!!, failResponse.errors!!)
+        return try {
+            val result = mService.getMusic(url)
+            if(!result.isSuccessful) {
+                failResponse = NetworkModule.parseErrorResponse(result.errorBody(), ResponseApi.Error::class.java) ?: ResponseApi.Error(2, "Ocurrio un error")
+                throw SongException(failResponse.message!!, failResponse.errors!!)
+            }
+            ResponseApi.Success(
+                result.body()!!.statusCode,
+                result.body()!!.data,
+                result.body()!!.message
+            )
+        } catch(e: ConnectException) {
+            println(e.message)
+          throw SongException("No se pudo conectar con el servidor", null)
+        } catch(e: SocketTimeoutException) {
+            throw SongException("Se agoto el tiempo de espera", null)
         }
-        return ResponseApi.Success(
-            result.body()!!.statusCode,
-            result.body()!!.data,
-            result.body()!!.message
-        )
+
     }
 
     suspend fun getIdSong(url: String, iTag: Int): ResponseApi.Success<SongIdModel> {

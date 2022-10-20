@@ -3,7 +3,7 @@ package com.m_and_a_company.canelatube.domain.network
 import com.m_and_a_company.canelatube.domain.data.models.DIRECTORY_NAME_SAVE_SONGS
 import java.io.File
 
-const val BASE_URL = "http://192.168.1.125:3333/api/v1/"
+const val BASE_URL = "http://192.168.1.66:3333/api/v1/"
 const val DEBUG_URL = "https://canelatube.alwaysdata.net/api/v1/"
 const val GET_INFO_PREFIX = "info"
 const val GET_SONG_INFO = "$GET_INFO_PREFIX/song"

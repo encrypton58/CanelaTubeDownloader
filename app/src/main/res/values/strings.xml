@@ -6,12 +6,21 @@
     <string name="title_music">Música</string>
     <string name="title_video">Vídeo</string>
     <string name="no_have_internet_connection">No tienes conexión a internet</string>
+    <string name="type_download_select_type_no_valid">No ha seleccionado un tipo de descarga</string>
+    <string name="type_download_select_type_video_title">Descarga de video</string>
+    <string name="type_download_select_type_video_message">Aun no se implementa esta funcion intente en la siguiente actualización</string>
+    <string name="download_no_url_entered">No se ha podido obtener la url del video</string>
     <string name="download_in_progress">Descarga en progreso</string>
     <string name="download_success_title">Descarga Exitosa!</string>
-    <string name="permission_denied">Permiso denegado</string>
+    <string name="permission_denied">Permisos no establecido intentalo de nuevo</string>
+    <string name="not_has_permissions_title">No se han obtenido los permisos</string>
+    <string name="not_has_permissions_body">Para continuar es necesario aceptar los permisos accede a la configuración de la aplicación y permitelos desde ahi</string>
+    <string name="permission_not_set_storage_manager">Se necesita activar el administrador de almacenamiento para continuar la descarga</string>
+    <string name="download_cancel_message">Se ha cancelado la descarga</string>
+    <string name="permissions_not_set">No se han establecido los permisos requeridos para la descarga</string>
 
-    <string name="convert_title">Convirtiendo... Espera un momento</string>
-    <string name="download_title">Descargando...</string>
+    <string name="download_press_message">Selecciona el formato de descarga</string>
+    <string name="download_title">Descargando</string>
     <string name="set_info_song_data">%1s</string>
 
     <string name="permissions_required_title">Permisos requeridos</string>

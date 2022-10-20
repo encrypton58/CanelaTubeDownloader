@@ -58,7 +58,17 @@ class DownloadFormatsAdapter: RecyclerView.Adapter<DownloadFormatsAdapter.ViewHo
 
     }
 
+    /**
+     * Escuchante al momento de seleccionar un formato
+     * para su descarga
+     */
     interface DownloadFormatsAdapterListener {
+
+        /**
+         * Selecciona el formato para su descarga
+         * @param format objeto que contiene la información del formato
+         */
         fun onFormatClicked(format: Format)
+
     }
 }

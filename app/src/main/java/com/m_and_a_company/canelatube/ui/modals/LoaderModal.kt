@@ -9,6 +9,8 @@ class LoaderModal(context: Context): Dialog(context) {
     init {
         setContentView(R.layout.overlay_loader_layout)
         window?.setBackgroundDrawableResource(android.R.color.transparent)
+        setCancelable(false)
+        setCanceledOnTouchOutside(false)
     }
 
 }

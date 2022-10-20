@@ -8,11 +8,9 @@ import android.provider.Settings
 import androidx.annotation.RequiresApi
 
 @RequiresApi(Build.VERSION_CODES.M)
-fun openMangeOverlayPermission(ctx: Context): Intent? {
-    val intent = Intent(
-        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-        Uri.parse("package:${ctx.packageName}")
-    )
+fun openMangeOverlayPermission(ctx: Context): Intent {
+    val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+    val uri =  Uri.fromParts("package", ctx.packageName, null)
+    intent.data = uri
     return intent
-
 }

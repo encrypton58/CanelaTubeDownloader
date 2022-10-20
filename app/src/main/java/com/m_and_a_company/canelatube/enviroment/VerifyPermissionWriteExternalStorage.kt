@@ -5,16 +5,13 @@ import android.os.Build
 import android.os.Environment
 import androidx.core.content.ContextCompat
 
-fun verifyPermissionsWriteExternalStorage(ctx: Context): HashMap<String, Boolean> {
+fun verifyPermissionsWriteExternalStorage(ctx: Context): Boolean {
 
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        val map = HashMap<String, Boolean>()
-        map[VERSION_R_MORE] = Environment.isExternalStorageManager()
-        map
+        Environment.isExternalStorageManager()
     } else {
-        val map = HashMap<String, Boolean>()
-        map[VERSION_LESS_R] = ContextCompat.checkSelfPermission(ctx, android.Manifest.permission.READ_EXTERNAL_STORAGE) == android.content.pm.PackageManager.PERMISSION_GRANTED
-        map
+        val permission = ContextCompat.checkSelfPermission(ctx, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        permission == android.content.pm.PackageManager.PERMISSION_GRANTED
     }
 
 }

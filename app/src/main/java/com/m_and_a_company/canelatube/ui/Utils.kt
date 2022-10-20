@@ -3,21 +3,22 @@ package com.m_and_a_company.canelatube.ui
 import android.content.Context
 import android.widget.Toast
 import com.m_and_a_company.canelatube.R
-import com.m_and_a_company.canelatube.domain.network.model.RequestErrors
 import com.m_and_a_company.canelatube.network.domain.model.ErrorModel
 
 object Utils {
 
-    fun buildMessageError(errors: List<ErrorModel>): String {
+    fun buildMessageError(errors: List<ErrorModel>?): String {
         val message = StringBuilder()
-        if(!errors.isEmpty()) {
-            errors.forEach { error ->
-                message.append("${error.field} ")
-                message.append("${error.message} ")
-                message .append("${error.rule} ")
+        errors?.let {
+            if(!errors.isEmpty()) {
+                errors.forEach { error ->
+                    message.append("${error.field} ")
+                    message.append("${error.message} ")
+                    message .append("${error.rule} ")
 
+                }
+                return message.toString()
             }
-            return message.toString()
         }
         return ""
     }

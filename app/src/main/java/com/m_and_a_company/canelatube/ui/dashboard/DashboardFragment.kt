@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.m_and_a_company.canelatube.databinding.FragmentDashboardBinding
-import com.m_and_a_company.canelatube.ui.svdn.SVDN
 
 class DashboardFragment : Fragment() {
 
@@ -34,7 +33,6 @@ class DashboardFragment : Fragment() {
         dashboardViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
-        startActivity(Intent(activity, SVDN::class.java))
         return root
     }
 

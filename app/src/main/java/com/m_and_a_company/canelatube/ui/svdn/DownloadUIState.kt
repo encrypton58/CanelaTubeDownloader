@@ -12,6 +12,6 @@ sealed class DownloadUIState {
 
     data class SuccessGetSongId(val song: SongIdModel) : DownloadUIState()
 
-    data class Error(val message: String, val errors: List<ErrorModel>) : DownloadUIState()
+    data class Error(val message: String, val errors: List<ErrorModel>?) : DownloadUIState()
 
 }

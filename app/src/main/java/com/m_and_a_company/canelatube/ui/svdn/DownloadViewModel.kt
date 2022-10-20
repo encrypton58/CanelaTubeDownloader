@@ -40,6 +40,7 @@ class DownloadViewModel(
     }
 
     fun getIdSong(url: String, iTag: Int) {
+        mutableLiveDataViewState.postValue(DownloadUIState.Loading)
         viewModelScope.launch {
             val result = getIdSongUseCase(url, iTag)
             when (ResponseStatus.fromInt(result.statusCode)) {

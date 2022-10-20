@@ -28,6 +28,7 @@
         <activity
             android:name=".ui.svdn.DownloadActivity"
             android:theme="@style/SVDNTranslucentTheme"
+             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -42,11 +43,6 @@
             android:name=".enviroment.service.FinishedDownloadService"
             android:enabled="true"
             android:exported="false" />
-        
-        <activity
-            android:name=".ui.svdn.SVDN"
-            android:exported="false"
-            android:theme="@style/SVDNTranslucentTheme"/>
 
         <activity
             android:name=".MainActivity"
