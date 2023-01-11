@@ -5,12 +5,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission
-        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage" />
 
     <application
         android:allowBackup="true"
@@ -27,9 +23,9 @@
 
         <activity
             android:name=".ui.svdn.DownloadActivity"
-            android:theme="@style/SVDNTranslucentTheme"
-             android:screenOrientation="portrait"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/SVDNTranslucentTheme">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
@@ -46,10 +42,11 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="com.m_and_a_company.canelatube.OPEN_DETAIL_DOWNLOADS_ACTIVITY"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -6,13 +6,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.m_and_a_company.canelatube.R
 import com.m_and_a_company.canelatube.databinding.DownloadFormatItemBinding
-import com.m_and_a_company.canelatube.network.domain.model.Format
+import com.m_and_a_company.canelatube.domain.network.model.Format
 import java.lang.StringBuilder
 
 class DownloadFormatsAdapter: RecyclerView.Adapter<DownloadFormatsAdapter.ViewHolder>() {
 
     private var formats: List<Format> = listOf()
-    protected var clickListener: DownloadFormatsAdapterListener? = null
+    var clickListener: DownloadFormatsAdapterListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
        val layoutInflater = LayoutInflater.from(parent.context)

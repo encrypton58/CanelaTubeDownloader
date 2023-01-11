@@ -1,37 +1,61 @@
 <resources>
     <string name="app_name">Canela Tube</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-    <string name="title_music">Música</string>
-    <string name="title_video">Vídeo</string>
-    <string name="no_have_internet_connection">No tienes conexión a internet</string>
-    <string name="type_download_select_type_no_valid">No ha seleccionado un tipo de descarga</string>
-    <string name="type_download_select_type_video_title">Descarga de video</string>
-    <string name="type_download_select_type_video_message">Aun no se implementa esta funcion intente en la siguiente actualización</string>
-    <string name="download_no_url_entered">No se ha podido obtener la url del video</string>
-    <string name="download_in_progress">Descarga en progreso</string>
-    <string name="download_success_title">Descarga Exitosa!</string>
-    <string name="permission_denied">Permisos no establecido intentalo de nuevo</string>
+
+    <!-- Permission text -->
+    <string name="permission_denied">Permisos no establecidos, se necesitan para el correcto funcionamiento de la app, otorgalos y intenta de nuevo</string>
     <string name="not_has_permissions_title">No se han obtenido los permisos</string>
     <string name="not_has_permissions_body">Para continuar es necesario aceptar los permisos accede a la configuración de la aplicación y permitelos desde ahi</string>
     <string name="permission_not_set_storage_manager">Se necesita activar el administrador de almacenamiento para continuar la descarga</string>
     <string name="download_cancel_message">Se ha cancelado la descarga</string>
     <string name="permissions_not_set">No se han establecido los permisos requeridos para la descarga</string>
-
     <string name="download_press_message">Selecciona el formato de descarga</string>
     <string name="download_title">Descargando</string>
-    <string name="set_info_song_data">%1s</string>
-
     <string name="permissions_required_title">Permisos requeridos</string>
     <string name="permissions_required_message">Para poder descargar tus canciones favoritas es necesario el permiso</string>
     <string name="accept_text_dialog">Aceptar</string>
     <string name="cancel_text_dialog">Cancelar</string>
 
-    <!-- Vista de descarga de cancion-->
-    <string name="lbl_select_type_question">¿Qué tipo de descarga deseas?</string>
-    <string name="lbl_select_type_video">Video</string>
+    <!-- BottomSheet download -->
+    <string name="download_no_url_entered">No se ha podido obtener la url del video</string>
+
+
+    <!-- Vista de tipo de descarga y overlayloading-->
     <string name="lbl_select_type_audio">Audio</string>
-    <string name="lbl_select_type_accept">Aceptar</string>
+    <string name="loading_text_dialog">Cargando</string>
+    <string name="lbl_desing_by">Designed by M &amp; A Company</string>
+    <string name="lbl_select_type_question">¿Qué quieres descargar?</string>
+    <string name="type_download_select_type_video_message">Aun no se implementa esta funcion intente en la siguiente actualización</string>
+    <string name="type_download_select_type_no_valid">No ha seleccionado un tipo de descarga</string>
+    <string name="lbl_error_details"><u>Ver Detalles del error</u></string>
+    <string name="lbl_error_details_error_title">Detalles de error</string>
+
+    <!-- Main -->
+    <string name="title_downloaded_song_item">%1$s - %2$s</string>
+    <string name="btn_text_song_item_download">Descargar</string>
+    <string name="title_empty_message">No hay canciones para descarga</string>
+    <string name="title_empty_message_error">No se consiguio obtener la canciones</string>
+    <string name="title_message_error_on_delete_song">Se genero un error al eliminar la canción</string>
+    <string name="title_help_visualization">Ayuda para visualizar</string>
+    <string name="title_help_visualization_message">
+        Si no puedes visualizar la carpeta intenta con los siguientes pasos:
+        \n
+        \n
+        1. Usa el administrador de archivos de tu dispositivo.
+        \n
+        \n
+        2. Ve a la carpeta de Musica del dispositivo, ahi la encontraras como canelaTube.
+        \n
+        \n
+        <b>ruta de la carpeta:</b> %1$s.
+    </string>
+    <string name="title_permission_not_aviable">No hay permiso para ver las canciones descargadas</string>
+    <string name="title_downloads_song">Canciones descargadas</string>
+    <string name="lbl_not_songs_to_show">No hay canciones para mostrar, descarga nuevas canciones y visualizalas aqui</string>
+    <string name="title_delete_song_alert">¿Estas seguro que quieres eliminar la canción?</string>
+    <string name="message_delete_song_alert">Eliminaras la cancion, esta acción no se puede deshacer, ¿deseas continual con la acción?</string>
+    <string name="lbl_not_song_for_delete">No hay ninguna cancion a elminar</string>
+    <string name="lbl_state_unknow">Estado desconociodo</string>
+    <string name="option_menu_item_delete">Eliminar</string>
+
 
 </resources>

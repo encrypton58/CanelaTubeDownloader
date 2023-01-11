@@ -1,8 +1,8 @@
 package com.m_and_a_company.canelatube.usesCases
 
 import com.m_and_a_company.canelatube.domain.repository.song.SongsDataSource
-import com.m_and_a_company.canelatube.network.domain.model.MusicDownloadsModel
-import com.m_and_a_company.canelatube.network.domain.model.ResponseApi
+import com.m_and_a_company.canelatube.domain.network.model.MusicDownloadsModel
+import com.m_and_a_company.canelatube.domain.network.model.ResponseApi
 
 class GetInfoSongFromUrlUseCase(private val songsRepository: SongsDataSource) {
 

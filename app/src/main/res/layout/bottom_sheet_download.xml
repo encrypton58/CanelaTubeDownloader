@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/background_pastel_white">
+    android:background="@drawable/rounded_dialog"
+    tools:context=".ui.svdn.DownloadActivity">
 
     <View
         android:id="@+id/svdn_header_drag_separator2"
@@ -14,15 +15,15 @@
         android:background="@drawable/header_separator_small"
         app:layout_constraintBottom_toTopOf="@+id/bs_download_container"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="spread_inside" />
 
     <LinearLayout
         android:id="@+id/bs_download_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginVertical="10dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/bs_download_rv"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,7 +53,10 @@
                 android:layout_height="match_parent"
                 android:contentDescription="@string/app_name"
                 android:scaleType="centerCrop"
-                android:visibility="gone" />
+                android:src="@drawable/radio"
+                android:visibility="gone"
+                tools:layout_height="200dp"
+                tools:visibility="visible" />
 
         </androidx.cardview.widget.CardView>
 
@@ -61,19 +65,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="4dp"
             app:cardCornerRadius="16dp">
 
             <TextView
                 android:id="@+id/bs_download_title_author_tv"
                 style="@style/SVDNTextViewTheme"
                 android:layout_width="match_parent"
-                tools:text="Nombre de la cancion - author"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                tools:text="Nombre de la cancion - author " />
 
         </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/bs_download_link_show_error_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            tools:visibility="visible"
+            android:textColor="@color/link_color_pastel"
+            android:textStyle="bold"
+            android:focusable="true"
+            android:clickable="true"
+            android:text="@string/lbl_error_details"/>
 
     </LinearLayout>
 
@@ -81,13 +98,44 @@
         android:id="@+id/bs_download_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="30dp"
-        android:layout_marginHorizontal="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/bs_accept_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bs_download_container" />
+
+    <Button
+        android:id="@+id/bs_accept_btn"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginVertical="15dp"
+        android:layout_marginTop="192dp"
+        android:backgroundTint="@color/canela_background"
+        android:text="@string/accept_text_dialog"
+        android:textColor="@color/background_pastel_white"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bs_download_rv"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:text="@string/lbl_desing_by"
+        android:textColor="@color/marron_text_color_green"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bs_accept_btn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

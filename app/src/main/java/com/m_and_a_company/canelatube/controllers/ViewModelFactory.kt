@@ -5,11 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.m_and_a_company.canelatube.domain.repository.song.SongsDataSource
 import com.m_and_a_company.canelatube.domain.repository.song.SongsRepository
+import com.m_and_a_company.canelatube.ui.home.HomeViewModel
 import com.m_and_a_company.canelatube.ui.svdn.DownloadViewModel
-import com.m_and_a_company.canelatube.ui.svdn.SVDNViewModel
 import com.m_and_a_company.canelatube.usesCases.DownloadSongUseCase
+import com.m_and_a_company.canelatube.usesCases.FinishedDownloadUseCase
 import com.m_and_a_company.canelatube.usesCases.GetIdSongUseCase
 import com.m_and_a_company.canelatube.usesCases.GetInfoSongFromUrlUseCase
+import com.m_and_a_company.canelatube.usesCases.GetSongsUseCase
 
 object ViewModelFactory {
 
@@ -18,15 +20,19 @@ object ViewModelFactory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             when {
 
-                modelClass.isAssignableFrom(SVDNViewModel::class.java) -> {
-                    return SVDNViewModel() as T
-                }
-
                 modelClass.isAssignableFrom(DownloadViewModel::class.java) -> {
                     return DownloadViewModel(
                         providesGetInfoSongFromUrlUseCase(providesSongRepository(context)),
                         providesGetIdSongUseCase(providesSongRepository(context)),
                         providesDownloadSongUseCase(providesSongRepository(context))
+                    ) as T
+                }
+
+                modelClass.isAssignableFrom(HomeViewModel::class.java) -> {
+                    return HomeViewModel(
+                        providesGetSongsUseCase(providesSongRepository(context)),
+                        providesDownloadSongUseCase(providesSongRepository(context)),
+                        providesGetDeleteSongUseCase(providesSongRepository(context))
                     ) as T
                 }
 
@@ -37,6 +43,8 @@ object ViewModelFactory {
     }
 
     fun providesViewModelFactory(context: Context): ViewModelFactory = ViewModelFactory(context)
+
+    private fun providesGetSongsUseCase(songsRepository: SongsDataSource) = GetSongsUseCase(songsRepository)
 
     private fun providesGetInfoSongFromUrlUseCase(songsRepository: SongsDataSource): GetInfoSongFromUrlUseCase {
         return GetInfoSongFromUrlUseCase(songsRepository)
@@ -53,5 +61,10 @@ object ViewModelFactory {
     private fun providesGetIdSongUseCase(songsRepository: SongsDataSource): GetIdSongUseCase {
         return GetIdSongUseCase(songsRepository)
     }
+
+    private fun providesGetDeleteSongUseCase(songRepository: SongsDataSource): FinishedDownloadUseCase {
+        return FinishedDownloadUseCase(songRepository)
+    }
+
 
 }

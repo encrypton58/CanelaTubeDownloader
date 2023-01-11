@@ -9,6 +9,25 @@
     <color name="white">#FFFFFFFF</color>
     <color name="canela_background">#BF9878</color>
     <color name="canela_variant">#FFCDA4</color>
+
+    <!-- colors pastel -->
+    <color name="marron_dark_0">#A68069</color>
+    <color name="marron_dark_1">#BF9780</color>
+    <color name="marron_dark_2">#D8AF97</color>
+    <color name="marron_light_0">#ECD6C0</color>
+    <color name="marron_light_1">#FFFFEB</color>
+    <color name="marron_text_color_light_0">#F7F7F7</color>
+    <color name="marron_text_color_green">#A0A086</color>
+    <color name="clouds_1">#F6F6F6</color>
+    <color name="link_color_pastel">#84b6f4</color>
+    <color name="clouds_2">#CCCCCC</color>
+    <color name="background_pastel">#FFFFEB</color>
+    <color name="red_pastel_video_background">#FFBFB0</color>
+    <color name="blue_paster_audio_background">#C7F7F7</color>
+    <color name="red_pastel_video_background_selected">#FF6961</color>
+    <color name="blue_paster_audio_background_selected">#5086C1</color>
+    <color name="blue_background_item">#AEDDDD</color>
+
     <color name="background_pastel_white">#FAFAFA</color>
     <color name="background_gray_dark">#C8C8C9</color>
 </resources>

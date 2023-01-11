@@ -1,13 +1,12 @@
 package com.m_and_a_company.canelatube.enviroment
 
+import android.os.Build
 import android.os.Environment
 import com.m_and_a_company.canelatube.domain.data.models.DIRECTORY_NAME_SAVE_SONGS
 import java.io.File
 
-const val VERSION_R_MORE = "R+"
-const val VERSION_LESS_R = "R-"
-const val ID_NOTIFICATION_DOWNLOAD = 1009
-const val ID_NOTIFICATION_DOWNLOAD_SUCCESS = 1010
+const val PATH_SEARCH_lLOCAL_SONGS = "/storage/emulated/0/Music/canelaTube/%"
+
 fun getPathSongs(nameFile: String): File {
     val path = File(
         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC),
@@ -20,4 +19,9 @@ fun getPathSongs(nameFile: String): File {
     } else {
         File(path, nameFile)
     }
+}
+
+
+fun isUpApi29(): Boolean{
+    return Build.VERSION.SDK_INT > Build.VERSION_CODES.Q
 }

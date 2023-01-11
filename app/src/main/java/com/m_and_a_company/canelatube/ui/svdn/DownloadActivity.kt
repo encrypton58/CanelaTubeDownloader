@@ -1,17 +1,21 @@
 package com.m_and_a_company.canelatube.ui.svdn
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.airbnb.lottie.LottieDrawable
@@ -20,10 +24,7 @@ import com.m_and_a_company.canelatube.R
 import com.m_and_a_company.canelatube.controllers.ViewModelFactory
 import com.m_and_a_company.canelatube.databinding.ActivityDownloadBinding
 import com.m_and_a_company.canelatube.databinding.BottomSheetDownloadBinding
-import com.m_and_a_company.canelatube.enviroment.requestActiveStorageManager
-import com.m_and_a_company.canelatube.enviroment.verifyPermissionReadExternalStorage
-import com.m_and_a_company.canelatube.enviroment.verifyPermissionsWriteExternalStorage
-import com.m_and_a_company.canelatube.network.domain.model.Format
+import com.m_and_a_company.canelatube.domain.network.model.Format
 import com.m_and_a_company.canelatube.ui.SelectToDownloadTypeDialog
 import com.m_and_a_company.canelatube.ui.Utils
 import com.m_and_a_company.canelatube.ui.enums.StepsView
@@ -32,37 +33,29 @@ import com.m_and_a_company.canelatube.ui.listeners.OnSelectTypeDownload
 import com.m_and_a_company.canelatube.ui.modals.LoaderModal
 import com.m_and_a_company.canelatube.ui.modals.ModalAnimation
 import com.m_and_a_company.canelatube.ui.svdn.DownloadFormatsAdapter.DownloadFormatsAdapterListener
+import com.m_and_a_company.canelatube.ui.svdn.DownloadUIState.ClearState.getMessageFromErrors
 import com.squareup.picasso.Picasso
 
 class DownloadActivity : AppCompatActivity(), OnSelectTypeDownload, DownloadFormatsAdapterListener {
 
+    private var readPermission = false
+    private var writePermission = false
+    private var needShowSettingsModal = false
+    private lateinit var permissionsLauncher: ActivityResultLauncher<Array<String>>
+
+    private lateinit var settingsActivity: ActivityResultLauncher<Intent>
+    private var fromSettingsActivity = false
+
     companion object {
         const val GRIDS_COLUMNS = 3
         lateinit var urlToDownload: String
+        var itagDownload = 0
     }
 
     private lateinit var binding: ActivityDownloadBinding
     private val loader: LoaderModal by lazy {
         LoaderModal(this)
     }
-
-    private val callbackWritePermissions =
-        registerForActivityResult(
-            ActivityResultContracts.RequestPermission(),
-            ::onWritePermissionResult
-        )
-
-    private val callbackReadPermissions =
-        registerForActivityResult(
-            ActivityResultContracts.RequestPermission(),
-            ::onReadPermissionResult
-        )
-
-    private val callbackEnableStorageManager =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult(),
-            ::onEnableStorageManagerResult
-        )
 
     private val bottomSheet by lazy { BottomSheetDialog(this) }
     private var stepFlag: StepsView = StepsView.REQUIRED_PERMISSION
@@ -99,10 +92,7 @@ class DownloadActivity : AppCompatActivity(), OnSelectTypeDownload, DownloadForm
                 getString(R.string.not_has_permissions_body)
             )
             setCallback({
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                val uri: Uri = Uri.fromParts("package", packageName, null)
-                intent.data = uri
-                startActivity(intent)
+                settingsActivity.launch(createSettingsIntent())
                 isOpenSettingsConf = true
             }, ::cancelButton)
         }
@@ -115,13 +105,7 @@ class DownloadActivity : AppCompatActivity(), OnSelectTypeDownload, DownloadForm
         viewModel.viewState.observe(this, onChangeView)
         setContentView(binding.root)
         requestPermissions()
-    }
-
-    override fun onResume() {
-        if (!verifyPermissionReadExternalStorage(this) && isOpenSettingsConf) {
-            Utils.toastMessage(applicationContext, getString(R.string.permissions_not_set))
-        }
-        super.onResume()
+        createSettingsIntent()
     }
 
     override fun onAccept(type: TypeDownload) {
@@ -134,15 +118,36 @@ class DownloadActivity : AppCompatActivity(), OnSelectTypeDownload, DownloadForm
     }
 
     override fun onFormatClicked(format: Format) {
+        itagDownload = format.itag
         stepFlag = StepsView.SELECTED_SONG_DOWNLOAD
-        if (verifyPermissionReadExternalStorage(applicationContext) && verifyPermissionsWriteExternalStorage(
-                applicationContext
-            )
-        ) {
+        validateCanDownloadSong()
+    }
 
-            viewModel.getIdSong(urlToDownload, format.itag)
+
+    private fun updateOrRequestPermissions() {
+        val hasReadPermission = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+        ) == PackageManager.PERMISSION_GRANTED
+
+        val hasWritePermission = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        ) == PackageManager.PERMISSION_GRANTED
+        val minSdk29 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+        readPermission = hasReadPermission
+        writePermission = hasWritePermission || minSdk29
+        val permissionToRequest = mutableListOf<String>()
+        if (!writePermission) {
+            permissionToRequest.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
+        if (!readPermission) {
+            permissionToRequest.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+        if (permissionToRequest.isNotEmpty()) {
+            permissionsLauncher.launch(permissionToRequest.toTypedArray())
         } else {
-            onReadPermissionResult(verifyPermissionReadExternalStorage(applicationContext))
+            setupView()
         }
     }
 
@@ -158,11 +163,16 @@ class DownloadActivity : AppCompatActivity(), OnSelectTypeDownload, DownloadForm
                 setupBottomSheet { setupDataInBottom(state) }
             }
             is DownloadUIState.SuccessGetSongId -> {
-                viewModel.downloadSong(state.song.id)
+                viewModel.downloadSong(
+                    state.song.id
+                )
                 finishAffinity()
             }
             is DownloadUIState.Error -> {
                 setupBottomSheet { setupErrorInBottom(state) }
+            }
+            else -> {
+                Utils.toastMessage(applicationContext, "Action unknown")
             }
         }
     }
@@ -196,6 +206,9 @@ class DownloadActivity : AppCompatActivity(), OnSelectTypeDownload, DownloadForm
 
     private fun setupErrorInBottom(state: DownloadUIState.Error) {
         bottomSheetBinding.apply {
+            bsAcceptBtn.visibility = View.VISIBLE
+            bsDownloadImageView.visibility = View.GONE
+            bsDownloadRv.visibility = View.GONE
             modalAnimationView.apply {
                 visibility = View.VISIBLE
                 setAnimation(R.raw.error_rabbit)
@@ -204,8 +217,20 @@ class DownloadActivity : AppCompatActivity(), OnSelectTypeDownload, DownloadForm
                 playAnimation()
             }
             bsDownloadTitleAuthorTv.text = state.message
-            if (state.errors != null) {
-                Utils.toastMessage(applicationContext, Utils.buildMessageError(state.errors))
+            bsAcceptBtn.setOnClickListener { accept() }
+            val errorText = state.getMessageFromErrors()
+            if (errorText != null) {
+                bsDownloadLinkShowErrorDetails.visibility = View.VISIBLE
+                bsDownloadLinkShowErrorDetails.setOnClickListener {
+                    Utils.alertDialog(
+                        ctx = this@DownloadActivity,
+                        title = getString(R.string.lbl_error_details_error_title),
+                        message = errorText,
+                        positiveAction = { },
+                        negativeAction = { },
+                        enbledPositiveAction = false
+                    )
+                }
             }
         }
     }
@@ -216,46 +241,99 @@ class DownloadActivity : AppCompatActivity(), OnSelectTypeDownload, DownloadForm
 
     private fun getListDownload(type: TypeDownload) {
         when (type) {
-            TypeDownload.VIDEO -> {
-                Utils.alertDialog(
-                    this,
-                    getString(R.string.type_download_select_type_video_title),
-                    getString(R.string.type_download_select_type_video_message),
-                    {
-                        selectTypeDownloadDialog.show()
-                    },
-                    {
-                        Utils.toastMessage(applicationContext, getString(R.string.download_cancel_message))
-                        finish()
-                    })
-            }
             TypeDownload.AUDIO -> {
                 loader.show()
                 if (urlToDownload.isEmpty()) {
-                    Utils.toastMessage(applicationContext, getString(R.string.download_no_url_entered))
+                    Utils.toastMessage(
+                        applicationContext,
+                        getString(R.string.download_no_url_entered)
+                    )
                 }
                 viewModel.getInfoSongFromUrl(urlToDownload)
             }
             TypeDownload.UNDEFINED -> {
-                Utils.toastMessage(applicationContext, getString(R.string.type_download_select_type_no_valid))
+                Utils.toastMessage(
+                    applicationContext,
+                    getString(R.string.type_download_select_type_no_valid)
+                )
             }
         }
     }
 
     private fun requestPermissions() {
-        if (!verifyPermissionReadExternalStorage(this)) {
-            permissionsModal.show()
-        } else {
-            setupView()
+        permissionsLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions(),
+            ::onResultPermission
+        )
+        settingsActivity = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+            ::onResultSettingsActivity
+        )
+        updateOrRequestPermissions()
+
+    }
+
+    /**
+     * Manejador de resultado de la requisicion de permisos
+     * @param [mapPermission] contiene el nombre del permiso y si fue aceptado
+     */
+    private fun onResultPermission(mapPermission: Map<String, Boolean>) {
+        readPermission = mapPermission[Manifest.permission.READ_EXTERNAL_STORAGE] ?: readPermission
+        writePermission =
+            mapPermission[Manifest.permission.WRITE_EXTERNAL_STORAGE] ?: writePermission
+        val canRequestWritePermission = ActivityCompat.shouldShowRequestPermissionRationale(
+            this,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
+        val canRequestReadPermission = ActivityCompat.shouldShowRequestPermissionRationale(
+            this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+
+        needShowSettingsModal = !canRequestReadPermission || !canRequestWritePermission
+
+        when (stepFlag) {
+            StepsView.REQUIRED_PERMISSION -> setupView()
+            StepsView.SELECTED_SONG_DOWNLOAD -> validateCanDownloadSong()
+        }
+
+    }
+
+    private fun createSettingsIntent() =
+        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+            data = Uri.fromParts("package", packageName, null)
+        }
+
+    /**
+     * Manejador de resultado de abrir la configuracion de la app
+     * @param [result] Resultado de la actividad
+     */
+    private fun onResultSettingsActivity(result: ActivityResult) {
+        if (result.resultCode == Activity.RESULT_CANCELED) {
+            fromSettingsActivity = true
+            updateOrRequestPermissions()
         }
     }
 
+    private fun validateCanDownloadSong() {
+        if (writePermission && itagDownload != 0) {
+            if (stepFlag == StepsView.SELECTED_SONG_DOWNLOAD) {
+                viewModel.getIdSong(urlToDownload, itagDownload)
+            }
+        } else {
+            if (!needShowSettingsModal) {
+                permissionsModal.show()
+            } else {
+                sendSettingsModal.show()
+            }
+        }
+    }
 
     /**
      * Funcion que se ejecuta cuando se accepta el modal del dialogo de permisos
      */
     private fun acceptButton() {
-        callbackReadPermissions.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+        updateOrRequestPermissions()
     }
 
     /**
@@ -266,76 +344,9 @@ class DownloadActivity : AppCompatActivity(), OnSelectTypeDownload, DownloadForm
         finish()
     }
 
-    /**
-     * Dependiendo de la versión de Android, se solicita permiso de escritura
-     * si es mayor a 29, se solicita permiso de lectura
-     * si es mayor a 30, se solicita permiso de activar el administrador de almacenamiento
-     * @param accept[Boolean] si se aceptó o no el permiso
-     */
-    private fun onReadPermissionResult(accept: Boolean?) {
-        //si esto es true se puede mostrar el dilog de permisos
-        val cantShowModalPermission = ActivityCompat.shouldShowRequestPermissionRationale(
-            this,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        )
-
-        accept?.let { granted ->
-            //si no se aceptaron los permisos y el paso es cuando se piden los permisos
-            // se muestra muestra la vista de seleccion de cancion
-            if (!granted && stepFlag == StepsView.REQUIRED_PERMISSION) {
-                setupView()
-                return
-            }
-
-            //si se puede mostrar el modal de los permisos y se encuentra en la seleccion de la cancion
-            // muestra el modal que los requiere
-            if (cantShowModalPermission && stepFlag == StepsView.SELECTED_SONG_DOWNLOAD && !granted) {
-                permissionsModal.show()
-                return
-            }
-
-            // si no se puede mostrar el modal de permisos y se encuentra en el paso de seleccionar la cancion
-            // y los permisos no fueron aceptados se muestra el modal que envia a configuracion de la app
-            if (!cantShowModalPermission && stepFlag == StepsView.SELECTED_SONG_DOWNLOAD && !granted) {
-                sendSettingsModal.show()
-                return
-            }
-
-            if(granted) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    callbackEnableStorageManager.launch(requestActiveStorageManager(this))
-                } else {
-                    callbackWritePermissions.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                }
-            }
-        }
-    }
-
-    /**
-     * Escucha el resultado de la solicitud del StorageManager
-     * @param activityResult[ActivityResult] resultado de la actividad
-     */
-    private fun onEnableStorageManagerResult(activityResult: ActivityResult?) {
-        if(!verifyPermissionsWriteExternalStorage(this)) {
-            Utils.toastMessage(this, getString(R.string.permission_not_set_storage_manager))
-        } else  {
-            Utils.toastMessage(this, getString(R.string.download_press_message))
-        }
-    }
-
-    /**
-     * Escucha el resultado de la solicitud del permiso de escritura
-     * @param accept[Boolean] si se aceptó o no el permiso
-     */
-    private fun onWritePermissionResult(accept: Boolean?) {
-        accept?.let { granted ->
-            if (!granted) {
-                Utils.toastMessage(applicationContext, getString(R.string.permission_denied))
-                finish()
-            } else {
-                setupView()
-            }
-        }
+    private fun accept() {
+        bottomSheet.dismiss()
+        finishAffinity()
     }
 
 }
