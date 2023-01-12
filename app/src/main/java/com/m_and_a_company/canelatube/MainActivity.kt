@@ -296,26 +296,23 @@ class MainActivity : AppCompatActivity(), SongsAdapter.OnClickSongItemListener, 
     }
 
     private fun showSongsDownloadedNoPermission() {
-        bottomSheetBinding.textView.text = getString(R.string.title_permission_not_aviable)
+        bottomSheetBinding.showSongDownloadedTitle.text = getString(R.string.title_permission_not_aviable)
         bottomSheetDialog.show()
     }
 
-    /*TODO: Acomodar bien el detalle de mostrar las canciones despues de obtenerlas
-       del viewModel para que no haya detalles en la vista
-       tambien acomodar bien como funcionan los permisos y
-       por ultimo acomodar el codigo de la mejor manera en sentido de legibilidad y talvez
-       optimizacion y despues de esto posible version 1.0.0*/
     private fun showSongsDownloaded() {
         hasSongDownloaded = viewModel.hasSongsDownloaded(contentResolver)
         viewModel.getFilesDownloaded(contentResolver)
         if(hasSongDownloaded){
-            bottomSheetBinding.containerNothingShowSongDownloaded.visibility = View.GONE
+            bottomSheetBinding.showSongDownloadedContainerNothing.visibility = View.GONE
             bottomSheetBinding.showSongDownloadedRv.visibility = View.VISIBLE
-            bottomSheetBinding.textView.text = getString(R.string.title_downloads_song)
+            bottomSheetBinding.showSongDownloadedTitle.text = getString(R.string.title_downloads_song)
             bottomSheetBinding.showSongDownloadedRv.layoutManager =
                 LinearLayoutManager(applicationContext)
         }else{
-            bottomSheetBinding.containerNothingShowSongDownloaded.visibility = View.VISIBLE
+            bottomSheetBinding.showSongDownloadedContainerNothing.visibility = View.VISIBLE
+            bottomSheetBinding.showSongDownloadedTitle.text = getString(R.string.title_downloads_song_empty)
+            bottomSheetBinding.showSongDownloadedAnimEmpty.setAnimation(R.raw.empty_box_downloadeds)
             bottomSheetBinding.showSongDownloadedRv.visibility = View.GONE
         }
         bottomSheetDialog.show()

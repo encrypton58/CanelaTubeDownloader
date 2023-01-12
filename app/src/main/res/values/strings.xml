@@ -50,6 +50,7 @@
     </string>
     <string name="title_permission_not_aviable">No hay permiso para ver las canciones descargadas</string>
     <string name="title_downloads_song">Canciones descargadas</string>
+    <string name="title_downloads_song_empty">No hay canciones descargadas</string>
     <string name="lbl_not_songs_to_show">No hay canciones para mostrar, descarga nuevas canciones y visualizalas aqui</string>
     <string name="title_delete_song_alert">¿Estas seguro que quieres eliminar la canción?</string>
     <string name="message_delete_song_alert">Eliminaras la cancion, esta acción no se puede deshacer, ¿deseas continual con la acción?</string>
