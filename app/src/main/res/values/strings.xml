@@ -30,7 +30,6 @@
     <string name="lbl_error_details_error_title">Detalles de error</string>
 
     <!-- Main -->
-    <string name="title_downloaded_song_item">%1$s - %2$s</string>
     <string name="btn_text_song_item_download">Descargar</string>
     <string name="title_empty_message">No hay canciones para descarga</string>
     <string name="title_empty_message_error">No se consiguio obtener la canciones</string>

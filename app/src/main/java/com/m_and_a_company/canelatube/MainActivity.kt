@@ -44,7 +44,7 @@ import com.m_and_a_company.canelatube.ui.modals.ModalAnimation
 import com.m_and_a_company.canelatube.ui.svdn.DownloadUIState
 import com.m_and_a_company.canelatube.ui.svdn.DownloadUIState.ClearState.getMessageFromErrors
 
-class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, DownloadedSongsAdapter.OnClickSongDownloadedListener {
+class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, DownloadedSongsAdapter.SelectedSongDownloadedListener {
 
     //Permissions variables
     private var readPermission = false
@@ -123,6 +123,7 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
     private var song: SongDownloaded? = null
     private var selectedSongPosition = -1
     private var hasSongDownloaded = false
+    private var actionDetailDownloads = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -155,10 +156,9 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
         binding.apply {
             fgHomeRvSongs.layoutManager = LinearLayoutManager(applicationContext)
             fgHomeFabDownloads.setOnClickListener { showDownloadsBottomSheet() }
-            intent.action?.let { action ->
-                if(action == Notifications.OPEN_DETAIL_DOWNLOADS) {
-                    fgHomeFabDownloads.performClick()
-                }
+            intent.action?.let { actionDetailDownloads = it == Notifications.OPEN_DETAIL_DOWNLOADS }
+            if (actionDetailDownloads) {
+                fgHomeFabDownloads.performClick()
             }
         }
     }
@@ -196,10 +196,10 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
         if(readPermission) {
             hasSongDownloaded = viewModel.hasSongsDownloaded(contentResolver)
         }
-        viewModel.getSongs()
+        viewModel.getSongs(emitLoader = !actionDetailDownloads)
     }
 
-    override fun onClickSongDownloaded(uri: Uri) {
+    override fun onSelecteSongDownload(uri: Uri) {
         val playSong = Intent(Intent.ACTION_VIEW).apply { setDataAndType(uri, "audio/*") }
         startActivity(Intent.createChooser(playSong, "Reproducir con: "))
     }
