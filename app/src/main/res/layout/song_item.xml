@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,8 +11,8 @@
         android:layout_height="380dp"
         android:backgroundTint="@color/canela_variant"
         app:cardCornerRadius="30dp"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginVertical="20dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -76,6 +77,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="10dp"
                     android:src="@drawable/downloads_icon"
+                    app:tint="@color/white"
                     android:contentDescription="@string/app_name"
                     android:backgroundTint="@color/canela_background"
                     android:text="@string/btn_text_song_item_download" />
@@ -88,6 +90,7 @@
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginBottom="10dp"
                     android:contentDescription="@string/app_name"
+                    app:tint="@color/white"
                     android:src="@drawable/delete_icon"
                     android:backgroundTint="@color/red_pastel_video_background_selected"
                     android:layout_weight="1"/>

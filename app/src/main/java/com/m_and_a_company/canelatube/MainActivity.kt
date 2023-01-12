@@ -38,13 +38,13 @@ import com.m_and_a_company.canelatube.enviroment.Notifications
 import com.m_and_a_company.canelatube.enviroment.isUpApi29
 import com.m_and_a_company.canelatube.ui.Utils
 import com.m_and_a_company.canelatube.ui.home.HomeViewModel
-import com.m_and_a_company.canelatube.ui.home.SongsAdapter
+import com.m_and_a_company.canelatube.ui.home.SongsServerAdapter
 import com.m_and_a_company.canelatube.ui.modals.LoaderModal
 import com.m_and_a_company.canelatube.ui.modals.ModalAnimation
 import com.m_and_a_company.canelatube.ui.svdn.DownloadUIState
 import com.m_and_a_company.canelatube.ui.svdn.DownloadUIState.ClearState.getMessageFromErrors
 
-class MainActivity : AppCompatActivity(), SongsAdapter.OnClickSongItemListener, DownloadedSongsAdapter.OnClickSongDownloadedListener {
+class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, DownloadedSongsAdapter.OnClickSongDownloadedListener {
 
     //Permissions variables
     private var readPermission = false
@@ -132,12 +132,12 @@ class MainActivity : AppCompatActivity(), SongsAdapter.OnClickSongItemListener, 
         init()
     }
 
-    override fun onClickSongItem(id: Int) {
+    override fun onDownloadSong(id: Int) {
         Utils.toastMessage(applicationContext, "Comienza la descarga")
         viewModel.downloadSong(id, false)
     }
 
-    override fun onClickDeleteSong(id: Int, position: Int) {
+    override fun onDeleteSongSever(id: Int, position: Int) {
         viewModel.deleteSong(id)
     }
 
@@ -392,7 +392,7 @@ class MainActivity : AppCompatActivity(), SongsAdapter.OnClickSongItemListener, 
             }
             binding.fgHomeRvSongs.visibility = View.GONE
         } else {
-            binding.fgHomeRvSongs.adapter = SongsAdapter(this, songs)
+            binding.fgHomeRvSongs.adapter = SongsServerAdapter(this, songs)
         }
     }
 
