@@ -37,7 +37,7 @@ class HomeViewModel(
     val state: LiveData<DownloadUIState> = _state
     val songsDownloaded: LiveData<List<SongDownloaded>> = _songsDownloaded
 
-    fun getSongs() {
+    fun getSongs(emitLoader: Boolean = true) {
         executeRequest(run = {
             val result = getSongsUseCase()
             if(ResponseStatus.fromInt(result.statusCode) == ResponseStatus.SUCCESS){
@@ -45,7 +45,7 @@ class HomeViewModel(
             }
         }, except = {
             _state.postValue(DownloadUIState.Error(it.message!!, it.getErrors(), it.getTypeError()))
-        })
+        }, emitLoader)
     }
 
     fun downloadSong(id: Int, requiredDelete: Boolean) {
@@ -153,8 +153,13 @@ class HomeViewModel(
         _state.postValue(DownloadUIState.ClearState)
     }
 
-    private fun executeRequest(run: suspend () -> Unit, except: (e: SongException) -> Unit) {
-        _state.postValue(DownloadUIState.Loading)
+    private fun executeRequest(
+        run: suspend () -> Unit,
+        except: (e: SongException) -> Unit,
+        emitLoader: Boolean = true) {
+        if(emitLoader) {
+            _state.postValue(DownloadUIState.Loading)
+        }
         viewModelScope.launch {
             try{
                 run()

@@ -16,7 +16,7 @@ class DownloadedSongsAdapter(
 ): RecyclerView.Adapter<DownloadedSongsAdapter.ViewHolder>(){
 
     private var popUpItemListener: PopupMenu.OnMenuItemClickListener? = null
-    private var mOnClickSongDownloadedListener: OnClickSongDownloadedListener? = null
+    private var mOnClickSongDownloadedListener: SelectedSongDownloadedListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -32,7 +32,7 @@ class DownloadedSongsAdapter(
         return songs.size
     }
 
-    fun setOnClickSongDownloadedListener(listener: OnClickSongDownloadedListener) {
+    fun setOnClickSongDownloadedListener(listener: SelectedSongDownloadedListener) {
         this.mOnClickSongDownloadedListener = listener
     }
 
@@ -50,10 +50,15 @@ class DownloadedSongsAdapter(
 
         private lateinit var song: SongDownloaded
 
+        /**
+         * Renderiza la vista y lee los atributos para mostrarlos
+         * @param song Cancion a renderizar
+         * @param onClickItemListener lambda cuando se selecciona una canción
+         */
         fun bind(song: SongDownloaded, onClickItemListener: (SongDownloaded, Int) -> Unit){
             this.song = song
-            binding.songDownloadedItemTitle.text =
-                itemView.context.getString(R.string.title_downloaded_song_item, song.title, song.artist)
+            binding.songDownloadedItemTitle.text = song.title
+            binding.songDownloadedItemArtist.text = song.artist
             binding.songDownloadedItemOptions.setOnClickListener {
                 val popupMenu = PopupMenu(itemView.context, it)
                 val menuInflate = popupMenu.menuInflater
@@ -67,13 +72,20 @@ class DownloadedSongsAdapter(
         }
 
         override fun onClick(v: View?) {
-            mOnClickSongDownloadedListener?.onClickSongDownloaded(song.uri)
+            mOnClickSongDownloadedListener?.onSelecteSongDownload(song.uri)
         }
 
     }
 
-    interface OnClickSongDownloadedListener {
-        fun onClickSongDownloaded(uri: Uri)
+    /**
+     * Escuchante de selección de cancion descargada
+     */
+    interface SelectedSongDownloadedListener {
+        /**
+         * Selección de cancion descargada
+         * @param uri Ubicación del archivo
+         */
+        fun onSelecteSongDownload(uri: Uri)
     }
 
 }
