@@ -3,6 +3,7 @@ package com.m_and_a_company.canelatube.ui.home
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.m_and_a_company.canelatube.R
 import com.m_and_a_company.canelatube.databinding.SongItemBinding
@@ -11,7 +12,11 @@ import com.squareup.picasso.Picasso
 
 class SongsServerAdapter(
     private val actionSongListener: ActionsSongServer,
-    private val items: List<Song>): RecyclerView.Adapter<SongsServerAdapter.ViewHolder>() {
+    private val items: List<Song>,
+    private val checkAnimIn: Boolean
+    ): RecyclerView.Adapter<SongsServerAdapter.ViewHolder>() {
+
+    private var lastPosition = -1
 
     private val listener by lazy {
         actionSongListener
@@ -30,9 +35,21 @@ class SongsServerAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.render(items[position])
+        if(checkAnimIn) {
+            setAnimIn(holder.itemView, position)
+        }
+
     }
 
     override fun getItemCount() = items.size
+
+    private fun setAnimIn(viewToAnimate: View, position: Int) {
+        if(position > lastPosition) {
+            val animationUtils = AnimationUtils.loadAnimation(viewToAnimate.context, android.R.anim.slide_in_left)
+            viewToAnimate.startAnimation(animationUtils)
+            lastPosition = position
+        }
+    }
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 

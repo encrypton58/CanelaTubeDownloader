@@ -63,8 +63,8 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
                 Utils.toastMessage(applicationContext, "Se elimino correctamente")
-                viewModel.removeItem(selectedSongPosition)
-                selectedSongPosition = -1
+                viewModel.removeItem(mSelectedSongPosition)
+                mSelectedSongPosition = -1
             }
         }
 
@@ -120,10 +120,10 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
     }
 
     //other variables
-    private var song: SongDownloaded? = null
-    private var selectedSongPosition = -1
-    private var hasSongDownloaded = false
-    private var actionDetailDownloads = false
+    private var mSong: SongDownloaded? = null
+    private var mSelectedSongPosition = -1
+    private var mHasSongDownloaded = false
+    private var mActionDetailDownloads = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -156,8 +156,8 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
         binding.apply {
             fgHomeRvSongs.layoutManager = LinearLayoutManager(applicationContext)
             fgHomeFabDownloads.setOnClickListener { showDownloadsBottomSheet() }
-            intent.action?.let { actionDetailDownloads = it == Notifications.OPEN_DETAIL_DOWNLOADS }
-            if (actionDetailDownloads) {
+            intent.action?.let { mActionDetailDownloads = it == Notifications.OPEN_DETAIL_DOWNLOADS }
+            if (mActionDetailDownloads) {
                 fgHomeFabDownloads.performClick()
             }
         }
@@ -188,15 +188,15 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
 
         viewModel.songsDownloaded.observe(this) { songsDownloaded ->
             setAdapterAndShowBottomSheet(songsDownloaded)
-            if (selectedSongPosition != -1) {
-                downloadedSongsAdapter.removeItem(selectedSongPosition)
+            if (mSelectedSongPosition != -1) {
+                downloadedSongsAdapter.removeItem(mSelectedSongPosition)
             }
         }
 
         if(readPermission) {
-            hasSongDownloaded = viewModel.hasSongsDownloaded(contentResolver)
+            mHasSongDownloaded = viewModel.hasSongsDownloaded(contentResolver)
         }
-        viewModel.getSongs(emitLoader = !actionDetailDownloads)
+        viewModel.getSongs(emitLoader = !mActionDetailDownloads)
     }
 
     override fun onSelecteSongDownload(uri: Uri) {
@@ -206,8 +206,8 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
 
     private fun setAdapterAndShowBottomSheet(songs: List<SongDownloaded>) {
         downloadedSongsAdapter = DownloadedSongsAdapter(songs) { songSelected, position ->
-            song = songSelected
-            selectedSongPosition = position
+            mSong = songSelected
+            mSelectedSongPosition = position
         }.apply {
             setOnClickSongDownloadedListener(this@MainActivity)
             setPopUpItemListener(popUpMenuListener())
@@ -301,9 +301,9 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
     }
 
     private fun showSongsDownloaded() {
-        hasSongDownloaded = viewModel.hasSongsDownloaded(contentResolver)
+        mHasSongDownloaded = viewModel.hasSongsDownloaded(contentResolver)
         viewModel.getFilesDownloaded(contentResolver)
-        if(hasSongDownloaded){
+        if(mHasSongDownloaded){
             bottomSheetBinding.showSongDownloadedContainerNothing.visibility = View.GONE
             bottomSheetBinding.showSongDownloadedRv.visibility = View.VISIBLE
             bottomSheetBinding.showSongDownloadedTitle.text = getString(R.string.title_downloads_song)
@@ -392,7 +392,7 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
             }
             binding.fgHomeRvSongs.visibility = View.GONE
         } else {
-            binding.fgHomeRvSongs.adapter = SongsServerAdapter(this, songs)
+            binding.fgHomeRvSongs.adapter = SongsServerAdapter(actionSongListener = this, songs, mActionDetailDownloads)
         }
     }
 
@@ -427,7 +427,7 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
     }
 
     private fun deleteDownloadedSong() {
-        song?.let { song ->
+        mSong?.let { song ->
             deleteSong(songDeleteIntentLauncher, song.uri)
         } ?: Utils.toastMessage(applicationContext, getString(R.string.lbl_not_song_for_delete))
     }
@@ -446,10 +446,10 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
             if (isUpApi29()) {
                 pendingIntent = MediaStore.createDeleteRequest(contentResolver, deleteList)
             } else {
-                contentResolveInstance.delete(uri, "${Media._ID} = ?", arrayOf(song?.id.toString()))
+                contentResolveInstance.delete(uri, "${Media._ID} = ?", arrayOf(mSong?.id.toString()))
                 Utils.toastMessage(applicationContext, "Se elimino correctamente")
-                viewModel.removeItem(selectedSongPosition)
-                selectedSongPosition = -1
+                viewModel.removeItem(mSelectedSongPosition)
+                mSelectedSongPosition = -1
             }
 
 
