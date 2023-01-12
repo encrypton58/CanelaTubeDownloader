@@ -9,13 +9,12 @@ import com.m_and_a_company.canelatube.databinding.SongItemBinding
 import com.m_and_a_company.canelatube.domain.network.model.Song
 import com.squareup.picasso.Picasso
 
-class SongsAdapter(
-    private val onClickSongItemListener: OnClickSongItemListener,
-    private val items: List<Song>): RecyclerView.Adapter<SongsAdapter.ViewHolder>() {
+class SongsServerAdapter(
+    private val actionSongListener: ActionsSongServer,
+    private val items: List<Song>): RecyclerView.Adapter<SongsServerAdapter.ViewHolder>() {
 
-    //private val itemsList = items
     private val listener by lazy {
-        onClickSongItemListener
+        actionSongListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -39,21 +38,38 @@ class SongsAdapter(
 
         private val binding = SongItemBinding.bind( itemView )
 
+        /**
+         * Establece los atributos de la canción obtenida.
+         * @param song Canción a renderear
+         */
         fun render(song: Song){
             binding.apply {
                 songItemTitle.text = song.name
                 songItemSize.text = song.size
                 Picasso.get().load(song.image).into(songItemImage)
-                songItemDownload.setOnClickListener { listener.onClickSongItem(song.id) }
-                songItemDelete.setOnClickListener{ listener.onClickDeleteSong(song.id, adapterPosition) }
+                songItemDownload.setOnClickListener { listener.onDownloadSong(song.id) }
+                songItemDelete.setOnClickListener{ listener.onDeleteSongSever(song.id, adapterPosition) }
             }
         }
 
     }
 
-    interface OnClickSongItemListener {
-        fun onClickSongItem(id: Int)
-        fun onClickDeleteSong(id: Int, position: Int)
+    /**
+     * Escuchante de eventos del adaptador
+     */
+    interface ActionsSongServer {
+        /**
+         * Descarga la canción
+         * @param id ID de la canción a descargar
+         */
+        fun onDownloadSong(id: Int)
+
+        /**
+         * Elimina la canción guardada en el servidor
+         * @param id ID de la canción a eliminar
+         * @param position Posición de la cancion a eliminar del adaptador
+         */
+        fun onDeleteSongSever(id: Int, position: Int)
     }
 
 }
