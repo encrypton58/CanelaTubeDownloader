@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
         }
 
     //modals
-    private val loader by lazy { LoaderModal(this) }
+    private val mLoader by lazy { LoaderModal(this) }
     private val permissionsRequire by lazy {
         ModalAnimation(this).apply {
             setAnimation(R.raw.rabbit_moon)
@@ -90,14 +90,14 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
             setCallback(::modalSettingsAccept, ::cancelButton)
         }
     }
-    private val deleteModal by lazy {
+    private val mDeleteModal by lazy {
         ModalAnimation(this).apply {
             setAnimation(R.raw.delete_animation)
             setTitleAndDesc(
                 "Se elimino",
                 "Se elimino la cancion del sevidor correctamente"
             )
-            setCallback({}, {})
+            setCallback({ viewModel.getSongs(true) }, {})
         }
     }
 
@@ -111,7 +111,8 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
 
     //view
     private lateinit var binding: ActivityMainBinding
-    private lateinit var downloadedSongsAdapter: DownloadedSongsAdapter
+    private lateinit var mDownloadedSongsAdapter: DownloadedSongsAdapter
+    private lateinit var mSongsServerAdapter: SongsServerAdapter
     private val bottomSheetBinding by lazy { ShowSongsDownloadedBinding.inflate(layoutInflater) }
     private val bottomSheetDialog by lazy {
         BottomSheetDialog(this, R.style.AppBottomSheetDialogTheme).apply {
@@ -139,7 +140,7 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
     }
 
     override fun onDeleteSongSever(id: Int, position: Int) {
-        viewModel.deleteSong(id)
+        viewModel.deleteSong(id, position)
     }
 
     private fun onReadPermissionResult(accept: Boolean?) {
@@ -174,12 +175,12 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
             }
         viewModel.statePermission.observe(this, ::onStatePermission)
         viewModel.state.observe(this) {
-            loader.dismiss()
+            mLoader.dismiss()
             when (it) {
                 is DownloadUIState.Error -> setErrorView(it)
-                DownloadUIState.Loading -> loader.show()
+                DownloadUIState.Loading -> mLoader.show()
                 is DownloadUIState.SuccessSongs -> setSongs(it.songs, false)
-                is DownloadUIState.SuccessDelete -> deleteSong(it.isDelete)
+                is DownloadUIState.SuccessDelete -> deleteSong(it.isDelete, it.positionRemove)
                 else -> {
                     Utils.toastMessage(applicationContext, getString(R.string.lbl_state_unknow))
                 }
@@ -189,7 +190,7 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
         viewModel.songsDownloaded.observe(this) { songsDownloaded ->
             setAdapterAndShowBottomSheet(songsDownloaded)
             if (mSelectedSongPosition != -1) {
-                downloadedSongsAdapter.removeItem(mSelectedSongPosition)
+                mDownloadedSongsAdapter.removeItem(mSelectedSongPosition)
             }
         }
 
@@ -205,14 +206,14 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
     }
 
     private fun setAdapterAndShowBottomSheet(songs: List<SongDownloaded>) {
-        downloadedSongsAdapter = DownloadedSongsAdapter(songs) { songSelected, position ->
+        mDownloadedSongsAdapter = DownloadedSongsAdapter(songs.reversed()) { songSelected, position ->
             mSong = songSelected
             mSelectedSongPosition = position
         }.apply {
             setOnClickSongDownloadedListener(this@MainActivity)
             setPopUpItemListener(popUpMenuListener())
         }
-        bottomSheetBinding.showSongDownloadedRv.adapter = downloadedSongsAdapter
+        bottomSheetBinding.showSongDownloadedRv.adapter = mDownloadedSongsAdapter
     }
 
     private fun onStatePermission(b: Boolean?) {
@@ -386,19 +387,23 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
         if (songs.isEmpty()) {
             binding.fgHomeLlEmptyMessage.visibility = View.VISIBLE
             binding.fgHomeAnimEmpty.apply {
+                setAnimation(R.raw.empty_box_downloadeds)
                 repeatMode = LottieDrawable.RESTART
                 repeatCount = 3
                 playAnimation()
+
             }
             binding.fgHomeRvSongs.visibility = View.GONE
         } else {
-            binding.fgHomeRvSongs.adapter = SongsServerAdapter(actionSongListener = this, songs, mActionDetailDownloads)
+            mSongsServerAdapter = SongsServerAdapter(actionSongListener = this, songs, mActionDetailDownloads)
+            binding.fgHomeRvSongs.adapter = mSongsServerAdapter
         }
     }
 
-    private fun deleteSong(isDeleteSong: Boolean) {
+    private fun deleteSong(isDeleteSong: Boolean, positionRemove: Int) {
         if(isDeleteSong) {
-            deleteModal.show()
+            mSongsServerAdapter.removeSongItem(binding.fgHomeRvSongs.findViewHolderForLayoutPosition(positionRemove)?.itemView!!, positionRemove)
+            mDeleteModal.show()
         }
     }
 

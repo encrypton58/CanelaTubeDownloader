@@ -54,11 +54,11 @@ class HomeViewModel(
         }
     }
 
-    fun deleteSong(id: Int) {
+    fun deleteSong(id: Int, position: Int) {
         executeRequest(run = {
             val result = deleteSongUseCase.execute(id, null)
             if(ResponseStatus.fromInt(result.statusCode) == ResponseStatus.SUCCESS) {
-                _state.postValue(DownloadUIState.SuccessDelete(result.data!!))
+                _state.postValue(DownloadUIState.SuccessDelete(result.data!!, position))
             }
         }, except = {
             _state.postValue(DownloadUIState.Error(it.message!!, it.getErrors()))

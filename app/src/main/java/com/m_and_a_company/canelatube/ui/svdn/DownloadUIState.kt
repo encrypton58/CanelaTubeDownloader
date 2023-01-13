@@ -16,7 +16,7 @@ sealed class DownloadUIState {
 
     data class SuccessSongs(val songs: List<Song>) : DownloadUIState()
 
-    data class SuccessDelete(val isDelete: Boolean): DownloadUIState()
+    data class SuccessDelete(val isDelete: Boolean, val positionRemove: Int): DownloadUIState()
 
     data class Error(val message: String, val errors: List<ErrorModel>?, val type: TypeError? = TypeError.UNDEFINED) : DownloadUIState()
 

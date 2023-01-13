@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso
 
 class SongsServerAdapter(
     private val actionSongListener: ActionsSongServer,
-    private val items: List<Song>,
+    private var items: List<Song>,
     private val checkAnimIn: Boolean
     ): RecyclerView.Adapter<SongsServerAdapter.ViewHolder>() {
 
@@ -36,16 +36,26 @@ class SongsServerAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.render(items[position])
         if(checkAnimIn) {
-            setAnimIn(holder.itemView, position)
+            setAnim(holder.itemView, position, android.R.anim.slide_in_left)
         }
 
     }
 
     override fun getItemCount() = items.size
 
-    private fun setAnimIn(viewToAnimate: View, position: Int) {
+    fun removeSongItem(view: View, position: Int) {
+        val arrayItems = items.toMutableList()
+        arrayItems.removeAt(position)
+        items = arrayItems.toList()
+        setAnim(view, position, android.R.anim.slide_out_right)
+        notifyItemRemoved(position)
+    }
+
+
+
+    private fun setAnim(viewToAnimate: View, position: Int, animation: Int) {
         if(position > lastPosition) {
-            val animationUtils = AnimationUtils.loadAnimation(viewToAnimate.context, android.R.anim.slide_in_left)
+            val animationUtils = AnimationUtils.loadAnimation(viewToAnimate.context, animation)
             viewToAnimate.startAnimation(animationUtils)
             lastPosition = position
         }
