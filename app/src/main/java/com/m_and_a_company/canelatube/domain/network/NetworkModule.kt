@@ -79,10 +79,26 @@ class NetworkPreferences(context: Context) {
         return song
     }
 
+    fun setRequireCurrentDownloadDelete(requireDelete: Boolean) {
+        preferences.edit().putBoolean(KEY_REQUIRE_DELETE, requireDelete).apply()
+    }
+
+    fun getRequireCurrentDownloadDelete(): Boolean {
+        return preferences.getBoolean(KEY_REQUIRE_DELETE, false)
+    }
+
+    fun setIdFromDownloadManager(idDownload: Long) {
+        preferences.edit().putLong(KEY_ID_DOWN_MANAGER, idDownload).apply()
+    }
+
+    fun getIdFromDownloadManager(): Long = preferences.getLong(KEY_ID_DOWN_MANAGER, 0)
+
     companion object {
         private const val KEY_NAME_FILE_DOWNLOAD = "name_file"
         private const val KEY_EXTENSION_FILE_DOWNLOAD = "extension_file"
         private const val KEY_ID_TO_DOWNLOAD = "id_to_download"
+        private const val KEY_REQUIRE_DELETE = "require_delete"
+        private const val KEY_ID_DOWN_MANAGER = "id_down_manager"
     }
 
 }

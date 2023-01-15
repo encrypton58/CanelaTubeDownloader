@@ -198,6 +198,7 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
             mHasSongDownloaded = viewModel.hasSongsDownloaded(contentResolver)
         }
         viewModel.getSongs(emitLoader = !mActionDetailDownloads)
+        Notifications(applicationContext).createChannelNotification()
     }
 
     override fun onSelecteSongDownload(uri: Uri) {
@@ -205,8 +206,9 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
         startActivity(Intent.createChooser(playSong, "Reproducir con: "))
     }
 
+    //TODO: Agregar la cancion de la ultima descargada a la ultima
     private fun setAdapterAndShowBottomSheet(songs: List<SongDownloaded>) {
-        mDownloadedSongsAdapter = DownloadedSongsAdapter(songs.reversed()) { songSelected, position ->
+        mDownloadedSongsAdapter = DownloadedSongsAdapter(songs) { songSelected, position ->
             mSong = songSelected
             mSelectedSongPosition = position
         }.apply {

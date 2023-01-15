@@ -1,23 +1,24 @@
 package com.m_and_a_company.canelatube.enviroment
 
 import android.app.DownloadManager
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.m_and_a_company.canelatube.domain.network.NetworkModule
 import com.m_and_a_company.canelatube.enviroment.service.FinishedDownloadService
 
-class DownloadBroadcast(private val requiredDelete: Boolean, private val idDownloadValidate: Long) :
-    BroadcastReceiver() {
+//TODO: Refactorizar el codigo
 
-    override fun onReceive(context: Context?, intent: Intent?) {
-        downloadFished(context, intent)
+class DownloadBroadcast(private val context: Context){
+
+    private val preferences by lazy {
+        NetworkModule.provideNetworkPreferences(context)
     }
 
-    private fun downloadFished(context: Context?, intent: Intent?) {
-        if (intent != null && context != null && intent.action != null) {
+     fun downloadFished(intent: Intent?) {
+         val requiredDelete = preferences.getRequireCurrentDownloadDelete()
+        if (intent != null && intent.action != null) {
             if (intent.action == DownloadManager.ACTION_DOWNLOAD_COMPLETE) {
-                context.unregisterReceiver(this)
-                val validateErrorsInDownload = validateErrorInDownload(context)
+                val validateErrorsInDownload = validateErrorInDownload(context, preferences.getIdFromDownloadManager())
                 val notifications = Notifications(context)
                 if (!validateErrorsInDownload.second) {
                     //TODO: Agregar texto desde el string resource
@@ -37,10 +38,10 @@ class DownloadBroadcast(private val requiredDelete: Boolean, private val idDownl
         }
     }
 
-    private fun validateErrorInDownload(ctx: Context): Pair<String, Boolean> {
+    private fun validateErrorInDownload(ctx: Context, id: Long): Pair<String, Boolean> {
         try {
             val query = DownloadManager.Query()
-            query.setFilterById(idDownloadValidate)
+            query.setFilterById(id)
             val downloadManager = ctx.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             val cursor = downloadManager.query(query)
             if (!cursor.moveToFirst()) {

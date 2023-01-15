@@ -3,6 +3,7 @@ package com.m_and_a_company.canelatube.domain.network.client
 import android.app.DownloadManager
 import android.app.DownloadManager.Request
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import com.m_and_a_company.canelatube.domain.data.models.DownloadSong
@@ -22,9 +23,9 @@ import com.m_and_a_company.canelatube.domain.network.model.ResponseApi
 import com.m_and_a_company.canelatube.domain.network.model.Song
 import com.m_and_a_company.canelatube.domain.network.model.SongIdModel
 import com.m_and_a_company.canelatube.enviroment.getPathSongs
+import com.m_and_a_company.canelatube.enviroment.service.DownloadedListenerService
 import com.m_and_a_company.canelatube.getDownloadManager
 import com.m_and_a_company.canelatube.getRequestDownload
-import com.m_and_a_company.canelatube.setReceiverDownload
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -138,7 +139,10 @@ class MusicApiService(private val context: Context) {
         val request = getRequestDownload(downloadSong.id)
         val preferences = NetworkModule.provideNetworkPreferences(context)
         val idDownload = downloadUnification(downloadSong, preferences, request, downloadManager)
-        setReceiverDownload(context, downloadSong.requiredDelete, idDownload)
+        preferences.setIdFromDownloadManager(idDownload)
+        preferences.setRequireCurrentDownloadDelete(downloadSong.requiredDelete)
+        val serviceIntent = Intent(context, DownloadedListenerService::class.java)
+        context.startService(serviceIntent)
     }
 
     private fun downloadUnification(downloadSong: DownloadSong, preferences: NetworkPreferences, request: Request, downloadManager: DownloadManager): Long {
@@ -162,8 +166,7 @@ class MusicApiService(private val context: Context) {
         request.setDescription("Descargando")
         request.setDestinationUri(Uri.fromFile(getPathSongs(nameFileSave)))
         request.setNotificationVisibility(Request.VISIBILITY_VISIBLE)
-        val idDownload = downloadManager.enqueue(request)
-        return idDownload
+        return downloadManager.enqueue(request)
     }
 
     suspend fun finishDownload(id: Int): ResponseApi.Success<Boolean> {
