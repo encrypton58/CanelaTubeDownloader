@@ -31,18 +31,20 @@ class DownloadedListenerService : Service() {
 
         }
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationBuilder = NotificationCompat.Builder(this, Notifications.CHANNEL_ID)
-            .setSmallIcon(R.drawable.downloads_icon)
-            .setContentTitle("Esperando descarga")
-            .setContentText("Esperando a que la descarga finalice")
+        notificationBuilder = NotificationCompat.Builder(this, Notifications.CHANNEL_FOREGROUND_ID)
         registerReceiver(downloadManagerBroadcast, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
         super.onCreate()
     }
 
     override fun onBind(intent: Intent): IBinder? = null
 
+    //TODO: Agregar textos desde R.strings
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startForeground(1, notificationBuilder.build())
+        startForeground(1, notificationBuilder
+            .setSmallIcon(R.drawable.downloads_icon)
+            .setContentTitle("Descargando")
+            .setContentText("Esperando que la descarga finalice")
+            .build())
         return START_STICKY
     }
 

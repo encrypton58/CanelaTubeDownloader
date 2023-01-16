@@ -85,13 +85,14 @@ class HomeViewModel(
             Media.ARTIST,
             Media.DATA
         )
+        val shortOrder = "${Media.DATE_MODIFIED} DESC"
         val where = "${Media.IS_MUSIC} != 0 AND ${Media.DATA} LIKE '${PATH_SEARCH_lLOCAL_SONGS}'"
         contentResolver.query(
             path,
             cursorColumns,
             where,
             null,
-            null
+            shortOrder
         )?.use { cursor ->
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(cursor.getColumnIndexOrThrow(Media._ID))

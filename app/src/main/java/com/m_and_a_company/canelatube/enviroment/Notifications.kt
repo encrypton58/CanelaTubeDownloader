@@ -13,16 +13,20 @@ import com.m_and_a_company.canelatube.R
 //TODO: agregar la notificacion del servicio en primer plano y refactorizar
 class Notifications(private val ctx: Context){
 
-    private val CHANNEL_NAME = "Canela Error Notification"
+    private val CHANNEL_ERROR = "Canela de error"
+    private val CHANNEL_SUCCESS = "Canal de exito"
+    private val CHANNEL_FOREGROUND = "Canal de servicio primario"
     private val notificationManager = ctx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     companion object {
-        val CHANNEL_ID = "canela_error_noty"
+        const val CHANNEL_SUCCESS_ID = "canela_success_noty"
+        const val CHANNEL_FOREGROUND_ID = "canela_foreground"
+        const val CHANNEL_ERROR_ID = "canela_error_noty"
         const val OPEN_DETAIL_DOWNLOADS = "com.m_and_a_company.canelatube.OPEN_DETAIL_DOWNLOADS_ACTIVITY"
     }
 
     fun createNotificationErrorDownload(title: String, desc: String) {
-        val notification = NotificationCompat.Builder(ctx, CHANNEL_ID).apply {
+        val notification = NotificationCompat.Builder(ctx, CHANNEL_ERROR_ID).apply {
             setSmallIcon(R.drawable.downloads_icon)
             setContentTitle(title)
             setContentText(desc)
@@ -38,7 +42,7 @@ class Notifications(private val ctx: Context){
             action = OPEN_DETAIL_DOWNLOADS
         }
         val pendingIntent = PendingIntent.getActivity(ctx, 0, intentMain, PendingIntent.FLAG_IMMUTABLE or 0)
-        val notification = NotificationCompat.Builder(ctx, CHANNEL_ID).apply {
+        val notification = NotificationCompat.Builder(ctx, CHANNEL_SUCCESS_ID).apply {
             setSmallIcon(R.drawable.downloads_icon)
             setContentTitle(title)
             setContentText(desc)
@@ -52,8 +56,12 @@ class Notifications(private val ctx: Context){
 
     fun createChannelNotification() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
-            notificationManager.createNotificationChannel(channel)
+            val channelSuccess = NotificationChannel(CHANNEL_SUCCESS_ID, CHANNEL_SUCCESS, NotificationManager.IMPORTANCE_HIGH)
+            val channelError = NotificationChannel(CHANNEL_ERROR_ID, CHANNEL_ERROR, NotificationManager.IMPORTANCE_HIGH)
+            val channelForeground = NotificationChannel(CHANNEL_FOREGROUND_ID, CHANNEL_FOREGROUND, NotificationManager.IMPORTANCE_MIN)
+            notificationManager.createNotificationChannel(channelSuccess)
+            notificationManager.createNotificationChannel(channelError)
+            notificationManager.createNotificationChannel(channelForeground)
         }
     }
 
