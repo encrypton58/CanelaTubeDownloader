@@ -5,9 +5,11 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28"/>
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -22,8 +24,19 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
+        <activity
+            android:name=".InitActivitySp"
+            android:theme="@style/Theme.App.Starting"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
         <service
-            android:name=".enviroment.service.DownloadedListenerService"
+            android:name=".environment.service.DownloadedListenerService"
             android:enabled="true"
             android:exported="false" />
 
@@ -31,7 +44,8 @@
             android:name=".ui.svdn.DownloadActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/SVDNTranslucentTheme">
+            android:theme="@style/SVDNTranslucentTheme"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
@@ -42,21 +56,18 @@
         </activity>
 
         <service
-            android:name=".enviroment.service.FinishedDownloadService"
+            android:name=".environment.service.FinishedDownloadService"
             android:enabled="true"
             android:exported="false" />
 
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="fullSensor">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="com.m_and_a_company.canelatube.OPEN_DETAIL_DOWNLOADS_ACTIVITY"/>
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="com.m_and_a_company.canelatube.OPEN_DETAIL_DOWNLOADS_ACTIVITY" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

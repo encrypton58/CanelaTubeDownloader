@@ -4,4 +4,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="rounded_corner_radius_bottom_sheet">16dp</dimen>
     <dimen name="textview_title_size">16sp</dimen>
+    <dimen name="textview_small_text">12sp</dimen>
+    <dimen name="textview_large_text">20sp</dimen>
 </resources>

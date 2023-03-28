@@ -1,4 +1,4 @@
-package com.m_and_a_company.canelatube.enviroment.service
+package com.m_and_a_company.canelatube.environment.service
 
 import android.app.DownloadManager
 import android.app.NotificationManager
@@ -10,8 +10,8 @@ import android.content.IntentFilter
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.m_and_a_company.canelatube.R
-import com.m_and_a_company.canelatube.enviroment.DownloadBroadcast
-import com.m_and_a_company.canelatube.enviroment.Notifications
+import com.m_and_a_company.canelatube.environment.DownloadBroadcast
+import com.m_and_a_company.canelatube.environment.Notifications
 
 class DownloadedListenerService : Service() {
 

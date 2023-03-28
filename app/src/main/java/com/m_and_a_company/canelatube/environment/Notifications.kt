@@ -1,4 +1,4 @@
-package com.m_and_a_company.canelatube.enviroment
+package com.m_and_a_company.canelatube.environment
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -41,7 +41,13 @@ class Notifications(private val ctx: Context){
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             action = OPEN_DETAIL_DOWNLOADS
         }
-        val pendingIntent = PendingIntent.getActivity(ctx, 0, intentMain, PendingIntent.FLAG_IMMUTABLE or 0)
+
+        val typeFlag = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_IMMUTABLE
+        }else{
+            0
+        }
+        val pendingIntent = PendingIntent.getActivity(ctx, 0, intentMain, typeFlag)
         val notification = NotificationCompat.Builder(ctx, CHANNEL_SUCCESS_ID).apply {
             setSmallIcon(R.drawable.downloads_icon)
             setContentTitle(title)

@@ -6,10 +6,10 @@
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
+        style="@style/CardView.Custom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        app:cardBackgroundColor="@color/canela_background"
         app:cardCornerRadius="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,7 +43,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:alpha="0.5"
-                    android:background="@color/black"/>
+                    android:background="@color/black" />
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -69,12 +69,11 @@
 
                     <TextView
                         android:id="@+id/song_downloaded_item_title"
-                        style="@style/SVDNTextViewTheme"
+                        style="@style/Theme.CanelaTube.TextViewBase"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="start"
                         android:maxLines="2"
-                        android:textColor="@color/white"
                         android:textSize="12sp"
                         tools:text="Nombre de la cancion" />
 
@@ -83,9 +82,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:maxLines="1"
-                        android:textColor="@color/marron_light_1"
-                        android:textSize="12sp"
+                        style="@style/Theme.CanelaTube.TextViewColorGreen"
                         tools:text="Nombre del artista" />
 
                 </LinearLayout>
@@ -97,10 +94,10 @@
                     android:layout_marginEnd="8dp"
                     android:background="?android:attr/selectableItemBackground"
                     android:contentDescription="@string/app_name"
-                    app:tint="@color/white"
                     android:src="@drawable/icon_three_dots"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/white" />
 
             </LinearLayout>
 

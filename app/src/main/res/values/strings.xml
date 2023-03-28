@@ -55,6 +55,7 @@
     <string name="message_delete_song_alert">Eliminaras la cancion, esta acción no se puede deshacer, ¿deseas continual con la acción?</string>
     <string name="lbl_not_song_for_delete">No hay ninguna cancion a elminar</string>
     <string name="lbl_state_unknow">Estado desconociodo</string>
+    <string name="lbl_show_errors">Mostrando errores</string>
     <string name="option_menu_item_delete">Eliminar</string>
 
 

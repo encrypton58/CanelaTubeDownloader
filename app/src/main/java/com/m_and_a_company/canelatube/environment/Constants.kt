@@ -1,4 +1,4 @@
-package com.m_and_a_company.canelatube.enviroment
+package com.m_and_a_company.canelatube.environment
 
 import android.os.Build
 import android.os.Environment

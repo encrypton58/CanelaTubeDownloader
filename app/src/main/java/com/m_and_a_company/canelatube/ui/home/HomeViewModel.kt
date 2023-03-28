@@ -14,8 +14,8 @@ import com.m_and_a_company.canelatube.domain.data.models.DownloadSong
 import com.m_and_a_company.canelatube.domain.data.models.SongDownloaded
 import com.m_and_a_company.canelatube.domain.network.enum.ResponseStatus
 import com.m_and_a_company.canelatube.domain.network.exceptions.SongException
-import com.m_and_a_company.canelatube.enviroment.PATH_SEARCH_lLOCAL_SONGS
-import com.m_and_a_company.canelatube.enviroment.isUpApi29
+import com.m_and_a_company.canelatube.environment.PATH_SEARCH_lLOCAL_SONGS
+import com.m_and_a_company.canelatube.environment.isUpApi29
 import com.m_and_a_company.canelatube.ui.svdn.DownloadUIState
 import com.m_and_a_company.canelatube.usesCases.DownloadSongUseCase
 import com.m_and_a_company.canelatube.usesCases.FinishedDownloadUseCase

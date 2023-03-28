@@ -1,17 +1,20 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.CanelaTube" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.CanelaTube" parent="Theme.AppCompat.DayNight">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/marron_dark_1</item>
         <item name="colorPrimaryVariant">@color/marron_dark_0</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/marron_dark_2</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/marron_dark_2</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/marron_light_0</item>
+        <item name="colorSecondaryVariant">@color/marron_light_1</item>
+        <item name="colorOnSecondary">@color/marron_light_1</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/marron_dark_2</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="backgroundTint">@color/canela_background</item>
     </style>
 
     <style name="SVDNTranslucentTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -25,22 +28,57 @@
         <item name="android:statusBarColor">@color/canela_background</item>
     </style>
 
-    <style name="AppBottomSheetDialogTheme"
-        parent="Theme.Design.Light.BottomSheetDialog">
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
     </style>
 
-    <style name="AppModalStyle"
-        parent="Widget.Design.BottomSheet.Modal">
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/rounded_dialog</item>
     </style>
 
-    <style name="SVDNTextViewTheme" parent="Widget.AppCompat.TextView">
-        <item name="android:textColor">@color/marron_text_color_green</item>
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/canela_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/canela_tube_logo</item>
+        <item name="windowSplashScreenAnimationDuration">300</item>
+        <item name="postSplashScreenTheme">@style/Theme.CanelaTube</item>
+    </style>
+
+    <!-- Components Custom Styles Base -->
+
+    <style name="Theme.CanelaTube.TextViewBase">
         <item name="android:textSize">@dimen/textview_title_size</item>
         <item name="android:padding">8dp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Theme.CanelaTube.ButtonsBaseStyle">
+        <item name="tint">@color/white</item>
+    </style>
+
+    <style name="CardView.Custom">
+        <item name="cardBackgroundColor">@color/canela_variant</item>
+    </style>
+
+    <!-- Components Custom Styles -->
+
+    <style name="Theme.CanelaTube.TextViewBase.SVDTextView">
+        <item name="android:textColor">@color/marron_text_color_green</item>
+    </style>
+
+    <style name="Theme.CanelaTube.TextViewBase.ShowSongsDownloadTitle">
+        <item name="android:textSize">@dimen/textview_large_text</item>
+        <item name="android:textColor">@color/canela_background</item>
+    </style>
+
+    <style name="Theme.CanelaTube.TextViewColorGreen">
+        <item name="android:textSize">@dimen/textview_small_text</item>
+        <item name="maxLines">@integer/min_max_lines_textview</item>
+        <item name="android:textColor">@color/marron_text_color_green</item>
+    </style>
+
+    <style name="Theme.CanelaTube.ButtonsBaseStyle.ButtonDanger">
+        <item name="backgroundTint">@color/red_pastel_video_background_selected</item>
     </style>
 
 </resources>

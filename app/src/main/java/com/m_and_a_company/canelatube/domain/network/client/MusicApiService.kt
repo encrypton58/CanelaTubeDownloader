@@ -22,8 +22,8 @@ import com.m_and_a_company.canelatube.domain.network.model.MusicDownloadsModel
 import com.m_and_a_company.canelatube.domain.network.model.ResponseApi
 import com.m_and_a_company.canelatube.domain.network.model.Song
 import com.m_and_a_company.canelatube.domain.network.model.SongIdModel
-import com.m_and_a_company.canelatube.enviroment.getPathSongs
-import com.m_and_a_company.canelatube.enviroment.service.DownloadedListenerService
+import com.m_and_a_company.canelatube.environment.getPathSongs
+import com.m_and_a_company.canelatube.environment.service.DownloadedListenerService
 import com.m_and_a_company.canelatube.getDownloadManager
 import com.m_and_a_company.canelatube.getRequestDownload
 import okhttp3.OkHttpClient

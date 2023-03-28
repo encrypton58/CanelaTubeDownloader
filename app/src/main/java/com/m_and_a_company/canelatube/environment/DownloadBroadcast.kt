@@ -1,10 +1,10 @@
-package com.m_and_a_company.canelatube.enviroment
+package com.m_and_a_company.canelatube.environment
 
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
 import com.m_and_a_company.canelatube.domain.network.NetworkModule
-import com.m_and_a_company.canelatube.enviroment.service.FinishedDownloadService
+import com.m_and_a_company.canelatube.environment.service.FinishedDownloadService
 
 //TODO: Refactorizar el codigo
 

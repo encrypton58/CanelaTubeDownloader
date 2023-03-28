@@ -1,4 +1,4 @@
-package com.m_and_a_company.canelatube.enviroment.service
+package com.m_and_a_company.canelatube.environment.service
 
 import android.app.Service
 import android.content.Intent
@@ -9,7 +9,7 @@ import com.m_and_a_company.canelatube.domain.network.NetworkModule
 import com.m_and_a_company.canelatube.domain.network.exceptions.SongException
 import com.m_and_a_company.canelatube.domain.network.interfaces.DownloadFinishedListener
 import com.m_and_a_company.canelatube.domain.repository.song.SongsRepository
-import com.m_and_a_company.canelatube.enviroment.Notifications
+import com.m_and_a_company.canelatube.environment.Notifications
 import com.m_and_a_company.canelatube.usesCases.FinishedDownloadUseCase
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers

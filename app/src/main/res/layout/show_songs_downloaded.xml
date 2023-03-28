@@ -29,11 +29,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            style="@style/Theme.CanelaTube.TextViewBase.ShowSongsDownloadTitle"
             android:layout_marginTop="20dp"
             android:text="@string/title_downloads_song"
-            android:textColor="@color/canela_background"
-            android:textSize="20sp"
-            android:textStyle="bold"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/svdn_header_drag_separator" />
@@ -72,6 +71,7 @@
                     android:id="@+id/show_song_downloaded_container_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    style="@style/CardView.Custom"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginBottom="20dp"
                     app:cardCornerRadius="16dp">

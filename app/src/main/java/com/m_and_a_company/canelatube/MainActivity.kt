@@ -34,8 +34,8 @@ import com.m_and_a_company.canelatube.databinding.ShowSongsDownloadedBinding
 import com.m_and_a_company.canelatube.domain.data.models.SongDownloaded
 import com.m_and_a_company.canelatube.domain.network.enum.TypeError
 import com.m_and_a_company.canelatube.domain.network.model.Song
-import com.m_and_a_company.canelatube.enviroment.Notifications
-import com.m_and_a_company.canelatube.enviroment.isUpApi29
+import com.m_and_a_company.canelatube.environment.Notifications
+import com.m_and_a_company.canelatube.environment.isUpApi29
 import com.m_and_a_company.canelatube.ui.Utils
 import com.m_and_a_company.canelatube.ui.home.HomeViewModel
 import com.m_and_a_company.canelatube.ui.home.SongsServerAdapter
