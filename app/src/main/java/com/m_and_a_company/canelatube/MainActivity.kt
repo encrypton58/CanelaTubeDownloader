@@ -6,6 +6,7 @@ import android.app.Activity
 import android.app.PendingIntent
 import android.app.RecoverableSecurityException
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
@@ -153,7 +154,10 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
         }
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     private fun initView() {
+        //set orientation activity in portrait
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         binding.apply {
             fgHomeRvSongs.layoutManager = LinearLayoutManager(applicationContext)
             fgHomeFabDownloads.setOnClickListener { showDownloadsBottomSheet() }

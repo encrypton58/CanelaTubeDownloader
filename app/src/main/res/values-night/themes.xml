@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.CanelaTube" parent="Theme.AppCompat.DayNight">
         <!-- Primary brand color. -->
@@ -12,9 +12,11 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:navigationBarColor">@color/black</item>
         <item name="colorAccent">@color/marron_dark_2</item>
         <item name="android:textColor">@color/white</item>
         <item name="cardBackgroundColor">@color/red_pastel_video_background_selected</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
     </style>
 
     <!-- Components Custom Styles Base -->
@@ -29,7 +31,6 @@
     </style>
 
     <!-- Components Custom Styles -->
-
     <style name="Theme.CanelaTube.ButtonsBaseStyle.ButtonDanger">
         <item name="backgroundTint">@color/red_pastel_video_background_selected</item>
     </style>
