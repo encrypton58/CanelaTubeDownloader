@@ -10,7 +10,7 @@ sealed class DownloadUIState {
 
     object Loading : DownloadUIState()
 
-    data class Success(val musicDownloadsModel: MusicDownloadsModel) : DownloadUIState()
+    data class Success(val musicDownloadsModel: MusicDownloadsModel, val warningMessage: String? = null) : DownloadUIState()
 
     data class SuccessGetSongId(val song: SongIdModel) : DownloadUIState()
 

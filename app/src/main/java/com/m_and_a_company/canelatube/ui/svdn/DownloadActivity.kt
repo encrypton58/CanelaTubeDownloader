@@ -35,6 +35,7 @@ import com.m_and_a_company.canelatube.ui.modals.ModalAnimation
 import com.m_and_a_company.canelatube.ui.svdn.DownloadFormatsAdapter.DownloadFormatsAdapterListener
 import com.m_and_a_company.canelatube.ui.svdn.DownloadUIState.ClearState.getMessageFromErrors
 import com.squareup.picasso.Picasso
+import com.tapadoo.alerter.Alerter
 
 class DownloadActivity : AppCompatActivity(), OnSelectTypeDownload, DownloadFormatsAdapterListener {
 
@@ -57,6 +58,7 @@ class DownloadActivity : AppCompatActivity(), OnSelectTypeDownload, DownloadForm
         LoaderModal(this)
     }
 
+    private var alerterBigSong: Alerter? = null
     private val bottomSheet by lazy { BottomSheetDialog(this) }
     private var stepFlag: StepsView = StepsView.REQUIRED_PERMISSION
     private var isOpenSettingsConf = false
@@ -112,17 +114,11 @@ class DownloadActivity : AppCompatActivity(), OnSelectTypeDownload, DownloadForm
         getListDownload(type)
     }
 
-    override fun onCancel() {
-        Utils.toastMessage(applicationContext, getString(R.string.download_cancel_message))
-        finish()
-    }
-
     override fun onFormatClicked(format: Format) {
         itagDownload = format.itag
         stepFlag = StepsView.SELECTED_SONG_DOWNLOAD
         validateCanDownloadSong()
     }
-
 
     private fun updateOrRequestPermissions() {
         val hasReadPermission = ContextCompat.checkSelfPermission(
@@ -158,6 +154,7 @@ class DownloadActivity : AppCompatActivity(), OnSelectTypeDownload, DownloadForm
                 loader.show()
                 bottomSheet.setOnDismissListener(null)
                 bottomSheet.dismiss()
+                alerterBigSong = null
             }
             is DownloadUIState.Success -> {
                 setupBottomSheet { setupDataInBottom(state) }
@@ -201,6 +198,11 @@ class DownloadActivity : AppCompatActivity(), OnSelectTypeDownload, DownloadForm
             }
             bsDownloadRv.adapter = adapter
             bsDownloadRv.layoutManager = GridLayoutManager(applicationContext, GRIDS_COLUMNS)
+
+            state.warningMessage?.let { warning ->
+                alerterBigSong = Utils.alertTop(bottomSheet, warning, getString(R.string.lbl_message_has_warning_long_song))
+                alerterBigSong?.show()
+            }
         }
     }
 

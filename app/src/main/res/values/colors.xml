@@ -4,6 +4,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="canela_background">#BF9878</color>
     <color name="canela_variant">#FFCDA4</color>
+    <color name="background_our_screen">#DDD3AE</color>
 
     <!-- colors pastel -->
     <color name="marron_dark_0">#A68069</color>
@@ -20,8 +21,10 @@
     <color name="red_pastel_video_background">#FFBFB0</color>
     <color name="blue_paster_audio_background">#C7F7F7</color>
     <color name="red_pastel_video_background_selected">#FF6961</color>
+    <color name="yellow_pastel_background_warning">#D5C351</color>
     <color name="blue_paster_audio_background_selected">#5086C1</color>
     <color name="blue_background_item">#AEDDDD</color>
+    <color name="card_our_background">#9C8E69</color>
 
     <color name="background_pastel_white">#FAFAFA</color>
     <color name="background_gray_dark">#C8C8C9</color>

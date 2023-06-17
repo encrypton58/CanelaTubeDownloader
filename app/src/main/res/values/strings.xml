@@ -58,5 +58,40 @@
     <string name="lbl_show_errors">Mostrando errores</string>
     <string name="option_menu_item_delete">Eliminar</string>
 
+    <string name="lbl_menu_item_our">Acerca de</string>
+    <string name="lbl_our_us_licences">Licencias</string>
+
+    <!-- Our Screen texts -->
+    <string name="title_card_our_members">Miembros y colaboradores</string>
+    <string name="title_card_our_social">Redes Sociales</string>
+    <string name="title_card_our_other">Otro</string>
+    <string name="lbl_card_name_developer">EncryptonKey</string>
+    <string name="lbl_card_charge_developer">Principal desarrollador y Diseñador</string>
+
+
+    <string name="lbl_our_social_web_title">Sitio Web</string>
+    <string name="lbl_our_social_facebook_title">Facebook</string>
+    <string name="lbl_our_social_youtube_title">Youtube</string>
+    <string name="lbl_our_social_web_sub">Visita el sitio web de la app para saber mas </string>
+    <string name="lbl_our_social_facebook_sub">Siguenos en nuestra página</string>
+    <string name="lbl_our_social_youtube_sub">Suscribete a nuestro canal de YouTube</string>
+
+    <string name="lbl_our_other_changes_title">Registro de cambios</string>
+    <string name="lbl_our_other_license_title">Licencias de codigo abierto</string>
+    <string name="lbl_our_other_attributes_title">Atribuciones y agradecimiento</string>
+    <string name="lbl_our_other_changes_sub">Ve las novedades de la App</string>
+    <string name="lbl_our_other_license_sub">Detalles de licencia para software de código abierto</string>
+    <string name="lbl_our_other_attributes_sub">Mira los agradecimientos y atribuciones </string>
+
+
+    <string name="lbl_our_other_version_title">Versión</string>
+    <string name="generic_content_description">Imagen</string>
+    <string name="lbl_item_register_change_what_fixed">¡Que se arreglo!</string>
+    <string name="lbl_item_register_change_what_new">¡Que hay de nuevo!</string>
+    <string name="lbl_message_has_warning_long_song">La canción tiene una duración superior a los 5 minutos,
+        lo cual requerirá más tiempo para convertirla y descargarla. Por favor,
+        <b>no cierres la aplicación mientras se está procesando</b>
+    </string>
+
 
 </resources>

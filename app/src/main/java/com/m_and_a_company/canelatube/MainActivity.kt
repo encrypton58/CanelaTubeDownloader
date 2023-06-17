@@ -15,6 +15,8 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.MediaStore.Audio.Media
 import android.provider.Settings
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
@@ -38,6 +40,7 @@ import com.m_and_a_company.canelatube.domain.network.model.Song
 import com.m_and_a_company.canelatube.environment.Notifications
 import com.m_and_a_company.canelatube.environment.isUpApi29
 import com.m_and_a_company.canelatube.ui.Utils
+import com.m_and_a_company.canelatube.ui.about.OurActivity
 import com.m_and_a_company.canelatube.ui.home.HomeViewModel
 import com.m_and_a_company.canelatube.ui.home.SongsServerAdapter
 import com.m_and_a_company.canelatube.ui.modals.LoaderModal
@@ -133,6 +136,22 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
         setContentView(binding.root)
         initView()
         init()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.main_other_options, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.main_menu_our -> {
+                openOurScreen()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onDownloadSong(id: Int) {
@@ -487,6 +506,10 @@ class MainActivity : AppCompatActivity(), SongsServerAdapter.ActionsSongServer, 
             }
 
         }
+    }
+
+    private fun openOurScreen() {
+        startActivity(Intent(applicationContext, OurActivity::class.java))
     }
 
 }

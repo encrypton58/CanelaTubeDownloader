@@ -104,7 +104,8 @@ class MusicApiService(private val context: Context) {
             ResponseApi.Success(
                 result.body()!!.statusCode,
                 result.body()!!.data,
-                result.body()!!.message
+                result.body()!!.message,
+                result.body()!!.warningMessage
             )
         }
         return response

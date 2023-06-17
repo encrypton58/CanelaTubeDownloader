@@ -1,8 +1,11 @@
 package com.m_and_a_company.canelatube.ui
 
+import android.app.Dialog
 import android.content.Context
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.m_and_a_company.canelatube.R
+import com.tapadoo.alerter.Alerter
 
 object Utils {
 
@@ -34,4 +37,11 @@ object Utils {
         alertDialog.create().show()
     }
 
+    fun alertTop(dialog: Dialog, title: String, text: String) = Alerter.create(dialog)
+            .setTitle(title)
+            .setText(text)
+            .setIcon(R.drawable.icon_warning)
+            .setDuration(20 * 1000)
+            .enableSwipeToDismiss()
+            .setBackgroundColorInt(ContextCompat.getColor(dialog.context, R.color.yellow_pastel_background_warning))
 }

@@ -4,6 +4,7 @@ sealed class ResponseApi<out T>(
     val statusCode: Int,
     val data: T? = null,
     val message: String? = null,
+    val warningMessage: String? = null,
     val errors: List<ErrorModel>? = null
 ) {
 
@@ -11,11 +12,12 @@ sealed class ResponseApi<out T>(
         val _statusCode: Int,
         val _data: T? = null,
         val _message: String? = null,
+        val _warningMessage: String? = null
     ) : ResponseApi<T>(
         _statusCode,
         _data,
         _message,
-        null
+        _warningMessage
     )
 
     data class Error(
@@ -26,6 +28,7 @@ sealed class ResponseApi<out T>(
         _statusCode,
         null,
         _message,
+        null,
         _errors
     )
 

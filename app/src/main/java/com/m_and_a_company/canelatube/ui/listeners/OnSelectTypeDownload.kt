@@ -13,9 +13,4 @@ interface OnSelectTypeDownload {
      */
     fun onAccept(type: TypeDownload)
 
-    /**
-     * Cancela la selección del tipo de descarga
-     */
-    fun onCancel()
-
 }

@@ -11,21 +11,19 @@ import com.m_and_a_company.canelatube.ui.enums.TypeDownload
 import com.m_and_a_company.canelatube.ui.listeners.OnSelectTypeDownload
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SelectToDownloadTypeDialog(
-    activity: Activity,
+    private val activity: Activity,
     selectedTypeDownloadListener: OnSelectTypeDownload
 ) : Dialog(activity) {
 
-    private val selectTypeDownloadDialogBinding: SelectTypeDownloadDialogBinding
+    private val selectTypeDownloadDialogBinding: SelectTypeDownloadDialogBinding =
+        SelectTypeDownloadDialogBinding.inflate(activity.layoutInflater)
     private val listener: OnSelectTypeDownload
     private var typeDownload = TypeDownload.UNDEFINED
 
     init {
-        selectTypeDownloadDialogBinding =
-            SelectTypeDownloadDialogBinding.inflate(activity.layoutInflater)
         listener = selectedTypeDownloadListener
         setContentView(selectTypeDownloadDialogBinding.root)
         setCancelable(true)
@@ -75,8 +73,7 @@ class SelectToDownloadTypeDialog(
         }
     }
 
-    private suspend fun acceptTypeDownload() {
-        delay(500)
+    private fun acceptTypeDownload() {
         listener.onAccept(typeDownload)
         if(typeDownload != TypeDownload.UNDEFINED) {
             dismiss()
@@ -85,8 +82,17 @@ class SelectToDownloadTypeDialog(
         }
     }
 
+    /**
+     * Maneja dismiss dialog que cierra la actividad si no se selecciona un tipo
+     * de descarga válida o no se selecciona nada y se ejecuta OnBackPressed
+     * @param dialogInterface Interfaz de escucha
+     */
     private fun onDismissDialog(dialogInterface: DialogInterface) {
         dialogInterface.dismiss()
+        if (typeDownload == TypeDownload.UNDEFINED) {
+            activity.finish()
+            Utils.toastMessage(activity.applicationContext, activity.applicationContext.getString(R.string.download_cancel_message))
+        }
     }
 
 }

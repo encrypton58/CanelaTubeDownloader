@@ -28,7 +28,7 @@ class DownloadViewModel(
                 val result = getInfoSongFromUrlUseCase.execute(url)
                 when (ResponseStatus.fromInt(result.statusCode)) {
                     ResponseStatus.SUCCESS -> {
-                        mutableLiveDataViewState.value = DownloadUIState.Success(result.data!!)
+                        mutableLiveDataViewState.value = DownloadUIState.Success(result.data!!, result.warningMessage)
                     }
                     else -> {
                         mutableLiveDataViewState.value = DownloadUIState.Error("Codigo de estado: ${result.statusCode}", emptyList())
