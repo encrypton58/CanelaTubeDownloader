@@ -160,13 +160,14 @@ class DownloadActivity : AppCompatActivity(), OnSelectTypeDownload, DownloadForm
                 setupBottomSheet { setupDataInBottom(state) }
             }
             is DownloadUIState.SuccessGetSongId -> {
-                viewModel.downloadSong(
-                    state.song.id
-                )
                 finishAffinity()
             }
             is DownloadUIState.Error -> {
                 setupBottomSheet { setupErrorInBottom(state) }
+            }
+            is DownloadUIState.SuccessOnichan -> {
+                viewModel.downloadSong(state.song)
+                finishAffinity()
             }
             else -> {
                 Utils.toastMessage(applicationContext, "Action unknown")

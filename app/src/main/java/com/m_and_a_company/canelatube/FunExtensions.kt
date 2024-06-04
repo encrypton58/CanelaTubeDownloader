@@ -15,3 +15,5 @@ fun getDownloadManager(context: Context): DownloadManager{
 fun getRequestDownload(idSong: Int): Request{
     return Request(Uri.parse("${BASE_URL}music/download/$idSong"))
 }
+
+fun getRequestOnichan(url: String) =Request(Uri.parse("${BASE_URL}$url"))

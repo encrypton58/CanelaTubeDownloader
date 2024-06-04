@@ -8,10 +8,8 @@ import com.m_and_a_company.canelatube.domain.repository.song.SongsRepository
 import com.m_and_a_company.canelatube.ui.home.HomeViewModel
 import com.m_and_a_company.canelatube.ui.svdn.DownloadViewModel
 import com.m_and_a_company.canelatube.usesCases.DownloadSongUseCase
-import com.m_and_a_company.canelatube.usesCases.FinishedDownloadUseCase
 import com.m_and_a_company.canelatube.usesCases.GetIdSongUseCase
 import com.m_and_a_company.canelatube.usesCases.GetInfoSongFromUrlUseCase
-import com.m_and_a_company.canelatube.usesCases.GetSongsUseCase
 
 object ViewModelFactory {
 
@@ -29,11 +27,7 @@ object ViewModelFactory {
                 }
 
                 modelClass.isAssignableFrom(HomeViewModel::class.java) -> {
-                    return HomeViewModel(
-                        providesGetSongsUseCase(providesSongRepository(context)),
-                        providesDownloadSongUseCase(providesSongRepository(context)),
-                        providesGetDeleteSongUseCase(providesSongRepository(context))
-                    ) as T
+                    return HomeViewModel() as T
                 }
 
                 else -> throw IllegalArgumentException("Unknown ViewModel class")
@@ -43,8 +37,6 @@ object ViewModelFactory {
     }
 
     fun providesViewModelFactory(context: Context): ViewModelFactory = ViewModelFactory(context)
-
-    private fun providesGetSongsUseCase(songsRepository: SongsDataSource) = GetSongsUseCase(songsRepository)
 
     private fun providesGetInfoSongFromUrlUseCase(songsRepository: SongsDataSource): GetInfoSongFromUrlUseCase {
         return GetInfoSongFromUrlUseCase(songsRepository)
@@ -61,10 +53,4 @@ object ViewModelFactory {
     private fun providesGetIdSongUseCase(songsRepository: SongsDataSource): GetIdSongUseCase {
         return GetIdSongUseCase(songsRepository)
     }
-
-    private fun providesGetDeleteSongUseCase(songRepository: SongsDataSource): FinishedDownloadUseCase {
-        return FinishedDownloadUseCase(songRepository)
-    }
-
-
 }

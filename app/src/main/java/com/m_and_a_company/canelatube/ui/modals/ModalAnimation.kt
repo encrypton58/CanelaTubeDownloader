@@ -42,7 +42,4 @@ class ModalAnimation(context: Context): Dialog(context) {
         }
     }
 
-
-
-
 }

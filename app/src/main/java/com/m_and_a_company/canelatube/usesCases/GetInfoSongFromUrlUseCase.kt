@@ -6,8 +6,7 @@ import com.m_and_a_company.canelatube.domain.network.model.ResponseApi
 
 class GetInfoSongFromUrlUseCase(private val songsRepository: SongsDataSource) {
 
-    suspend fun execute(url: String): ResponseApi.Success<MusicDownloadsModel> {
-        return songsRepository.getInfoSongFromUrl(url)
-    }
+    suspend fun execute(url: String) = songsRepository.getInfoSongFromUrl(url)
+    
 
 }

@@ -33,6 +33,7 @@
     <string name="btn_text_song_item_download">Descargar</string>
     <string name="title_empty_message">No hay canciones para descarga</string>
     <string name="title_empty_message_error">No se consiguio obtener la canciones</string>
+    <string name="title_message_success_on_delete_song">Se elimino la canción correctamente</string>
     <string name="title_message_error_on_delete_song">Se genero un error al eliminar la canción</string>
     <string name="title_help_visualization">Ayuda para visualizar</string>
     <string name="title_help_visualization_message">

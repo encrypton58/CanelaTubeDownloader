@@ -9,25 +9,13 @@ import android.provider.MediaStore.Audio.Media
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.m_and_a_company.canelatube.domain.data.models.DownloadSong
 import com.m_and_a_company.canelatube.domain.data.models.SongDownloaded
-import com.m_and_a_company.canelatube.domain.network.enum.ResponseStatus
-import com.m_and_a_company.canelatube.domain.network.exceptions.SongException
 import com.m_and_a_company.canelatube.environment.PATH_SEARCH_lLOCAL_SONGS
 import com.m_and_a_company.canelatube.environment.isUpApi29
 import com.m_and_a_company.canelatube.ui.svdn.DownloadUIState
-import com.m_and_a_company.canelatube.usesCases.DownloadSongUseCase
-import com.m_and_a_company.canelatube.usesCases.FinishedDownloadUseCase
-import com.m_and_a_company.canelatube.usesCases.GetSongsUseCase
-import kotlinx.coroutines.launch
 import wseemann.media.FFmpegMediaMetadataRetriever
 
-class HomeViewModel(
-    private val getSongsUseCase: GetSongsUseCase,
-    private val downloadSongUseCase: DownloadSongUseCase,
-    private val deleteSongUseCase: FinishedDownloadUseCase
-) : ViewModel() {
+class HomeViewModel : ViewModel() {
 
     private val _state = MutableLiveData<DownloadUIState>()
     private val _permissions = MutableLiveData<Boolean>()
@@ -36,34 +24,6 @@ class HomeViewModel(
     val statePermission : LiveData<Boolean> = _permissions
     val state: LiveData<DownloadUIState> = _state
     val songsDownloaded: LiveData<List<SongDownloaded>> = _songsDownloaded
-
-    fun getSongs(emitLoader: Boolean = true) {
-        executeRequest(run = {
-            val result = getSongsUseCase()
-            if(ResponseStatus.fromInt(result.statusCode) == ResponseStatus.SUCCESS){
-                _state.postValue(DownloadUIState.SuccessSongs(result.data!!))
-            }
-        }, except = {
-            _state.postValue(DownloadUIState.Error(it.message!!, it.getErrors(), it.getTypeError()))
-        }, emitLoader)
-    }
-
-    fun downloadSong(id: Int, requiredDelete: Boolean) {
-        viewModelScope.launch {
-            downloadSongUseCase(DownloadSong(id, requiredDelete))
-        }
-    }
-
-    fun deleteSong(id: Int, position: Int) {
-        executeRequest(run = {
-            val result = deleteSongUseCase.execute(id, null)
-            if(ResponseStatus.fromInt(result.statusCode) == ResponseStatus.SUCCESS) {
-                _state.postValue(DownloadUIState.SuccessDelete(result.data!!, position))
-            }
-        }, except = {
-            _state.postValue(DownloadUIState.Error(it.message!!, it.getErrors()))
-        })
-    }
 
     fun removeItem(pos: Int) {
         _songsDownloaded.value?.let { songsDownloaded ->
@@ -116,12 +76,12 @@ class HomeViewModel(
                     }
                     songsLocal.add(SongDownloaded(id, title, artist, bitmap, uriSong, data))
                 }else{
-                    val ffmp = FFmpegMediaMetadataRetriever()
-                    ffmp.setDataSource(data)
-                    val byte = ffmp.embeddedPicture
+                    val metadata = FFmpegMediaMetadataRetriever()
+                    metadata.setDataSource(data)
+                    val byte = metadata.embeddedPicture
                     val bitmap = BitmapFactory.decodeByteArray(byte, 0, byte.size)
                     songsLocal.add(SongDownloaded(id, artist, title, bitmap, uriSong, data))
-                    ffmp.release()
+                    metadata.release()
                 }
             }
         }
@@ -152,22 +112,6 @@ class HomeViewModel(
 
     fun clearState() {
         _state.postValue(DownloadUIState.ClearState)
-    }
-
-    private fun executeRequest(
-        run: suspend () -> Unit,
-        except: (e: SongException) -> Unit,
-        emitLoader: Boolean = true) {
-        if(emitLoader) {
-            _state.postValue(DownloadUIState.Loading)
-        }
-        viewModelScope.launch {
-            try{
-                run()
-            }catch(e: SongException) {
-                except(e)
-            }
-        }
     }
 
 }

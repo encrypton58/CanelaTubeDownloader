@@ -3,6 +3,7 @@ package com.m_and_a_company.canelatube.ui.svdn
 import com.m_and_a_company.canelatube.domain.network.enum.TypeError
 import com.m_and_a_company.canelatube.domain.network.model.ErrorModel
 import com.m_and_a_company.canelatube.domain.network.model.MusicDownloadsModel
+import com.m_and_a_company.canelatube.domain.network.model.ResponseOnichan
 import com.m_and_a_company.canelatube.domain.network.model.Song
 import com.m_and_a_company.canelatube.domain.network.model.SongIdModel
 
@@ -14,9 +15,7 @@ sealed class DownloadUIState {
 
     data class SuccessGetSongId(val song: SongIdModel) : DownloadUIState()
 
-    data class SuccessSongs(val songs: List<Song>) : DownloadUIState()
-
-    data class SuccessDelete(val isDelete: Boolean, val positionRemove: Int): DownloadUIState()
+    data class SuccessOnichan(val song: ResponseOnichan) : DownloadUIState()
 
     data class Error(val message: String, val errors: List<ErrorModel>?, val type: TypeError? = TypeError.UNDEFINED) : DownloadUIState()
 

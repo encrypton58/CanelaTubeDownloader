@@ -72,7 +72,7 @@ class DownloadedSongsAdapter(
         }
 
         override fun onClick(v: View?) {
-            mOnClickSongDownloadedListener?.onSelecteSongDownload(song.uri)
+            mOnClickSongDownloadedListener?.onSelectedSongDownload(song.uri)
         }
 
     }
@@ -85,7 +85,7 @@ class DownloadedSongsAdapter(
          * Selección de cancion descargada
          * @param uri Ubicación del archivo
          */
-        fun onSelecteSongDownload(uri: Uri)
+        fun onSelectedSongDownload(uri: Uri)
     }
 
 }

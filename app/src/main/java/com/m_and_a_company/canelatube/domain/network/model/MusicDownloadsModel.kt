@@ -11,7 +11,8 @@ data class MusicDownloadsModel(
     val title: String = "",
     val author: String = "",
     val formats: List<Format> = emptyList(),
-    val thumbnail: String = ""
+    val thumbnail: String = "",
+    val warningMessage: String? = ""
 )
 
 /**
@@ -46,6 +47,13 @@ data class SongIdModel(
     val id: Int = 0,
     val name: String = "",
     val ext: String = ""
+)
+
+data class ResponseOnichan(
+    val url: String,
+    val name: String,
+    val ext: String,
+    val id: Int
 )
 
 data class Song(
