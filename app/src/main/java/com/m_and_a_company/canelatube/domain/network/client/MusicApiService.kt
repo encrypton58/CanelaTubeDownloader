@@ -6,6 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import com.m_and_a_company.canelatube.core.daison.DaisonApiCallImp
+import com.m_and_a_company.canelatube.core.daison.DaisonResponseService
+import com.m_and_a_company.canelatube.core.daison.ResultSet
 import com.m_and_a_company.canelatube.domain.data.models.DownloadSong
 import com.m_and_a_company.canelatube.domain.network.BASE_URL
 import com.m_and_a_company.canelatube.domain.network.CONNECT_TIMEOUT
@@ -38,8 +41,14 @@ class MusicApiService(private val context: Context) {
         const val TAG = "MusicApiService"
     }
 
-    private fun buildHttpClient(): Retrofit {
+    private var mService: MusicService
 
+    init {
+        val retrofit = buildHttpClient()
+        mService = retrofit.create(MusicService::class.java)
+    }
+
+    private fun buildHttpClient(): Retrofit {
         val okHttpClient = OkHttpClient.Builder().apply {
             readTimeout(WAIT_TIMEOUT, java.util.concurrent.TimeUnit.SECONDS)
             connectTimeout(CONNECT_TIMEOUT, java.util.concurrent.TimeUnit.SECONDS)
@@ -55,8 +64,6 @@ class MusicApiService(private val context: Context) {
 
     private lateinit var failResponse: ResponseApi.Error
 
-    private val mService = buildHttpClient().create(MusicService::class.java)
-
     private var listener: DownloadFinishedListener? = null
 
     fun setListener(listener: DownloadFinishedListener) {
@@ -68,9 +75,12 @@ class MusicApiService(private val context: Context) {
 
             val result = mService.getSongs()
 
-            if(!result.isSuccessful) {
+            if (!result.isSuccessful) {
                 Log.e(TAG, result.errorBody().toString())
-                failResponse = NetworkModule.parseErrorResponse(result.errorBody(), ResponseApi.Error::class.java) ?: ResponseApi.Error(2, "Ocurrio un error")
+                failResponse = NetworkModule.parseErrorResponse(
+                    result.errorBody(),
+                    ResponseApi.Error::class.java
+                ) ?: ResponseApi.Error(2, "Ocurrio un error")
                 failResponse.errors?.let {
                     throw SongException(failResponse.message!!, it, failResponse.statusCode)
                 } ?: throw SongException(failResponse.message!!, null, failResponse.statusCode)
@@ -91,36 +101,34 @@ class MusicApiService(private val context: Context) {
 
     }
 
-    suspend fun getListDownload(url: String): ResponseApi.Success<MusicDownloadsModel> {
-        val response = this.executeService {
-            val result = mService.getMusic(url)
-            if(!result.isSuccessful) {
-                failResponse = NetworkModule.parseErrorResponse(result.errorBody(), ResponseApi.Error::class.java) ?: ResponseApi.Error(2, "Ocurrio un error")
-                failResponse.errors?.let {
-                    throw SongException(failResponse.message!!, it, failResponse.statusCode)
-                }
-                throw SongException(failResponse.message!!, null, failResponse.statusCode)
-            }
-            ResponseApi.Success(
-                result.body()!!.statusCode,
-                result.body()!!.data,
-                result.body()!!.message,
-                result.body()!!.warningMessage
-            )
+    suspend fun getListDownload(url: String): DaisonResponseService<ResultSet<MusicDownloadsModel>> {
+        val result = DaisonApiCallImp().safeApiCall {
+            mService.getMusic(url)
         }
-        return response
+
+        when (result) {
+            is DaisonResponseService.Error -> {
+                throw SongException(result.message, result.errors, result.statusCode)
+            }
+
+            is DaisonResponseService.Success -> {}
+        }
+        return result
     }
 
     suspend fun getIdSong(url: String, iTag: Int): ResponseApi.Success<SongIdModel> {
         return this.executeService {
             val result = mService.getSongId(url, iTag)
-            if(!result.isSuccessful) {
+            if (!result.isSuccessful) {
                 Log.e(TAG, result.errorBody().toString())
-                failResponse = NetworkModule.parseErrorResponse(result.errorBody(), ResponseApi.Error::class.java) ?: ResponseApi.Error(2, "Ocurrio un error")
+                failResponse = NetworkModule.parseErrorResponse(
+                    result.errorBody(),
+                    ResponseApi.Error::class.java
+                ) ?: ResponseApi.Error(2, "Ocurrio un error")
                 failResponse.errors?.let {
                     throw SongException(failResponse.message!!, it, failResponse.statusCode)
                 }
-                throw SongException(failResponse.message!!, null,  failResponse.statusCode)
+                throw SongException(failResponse.message!!, null, failResponse.statusCode)
             }
             NetworkModule.provideNetworkPreferences(context).apply {
                 saveNameFile(result.body()!!.data!!.name)
@@ -146,16 +154,21 @@ class MusicApiService(private val context: Context) {
         context.startService(serviceIntent)
     }
 
-    private fun downloadUnification(downloadSong: DownloadSong, preferences: NetworkPreferences, request: Request, downloadManager: DownloadManager): Long {
+    private fun downloadUnification(
+        downloadSong: DownloadSong,
+        preferences: NetworkPreferences,
+        request: Request,
+        downloadManager: DownloadManager
+    ): Long {
         val extFileSave: String
         val nameFile: String
         val nameFileSave: String
-        if(downloadSong.requiredDelete) {
+        if (downloadSong.requiredDelete) {
             preferences.setIdToDownload(downloadSong.id)
             extFileSave = preferences.getExtensionFile()
             nameFile = preferences.getNameFile()
             nameFileSave = "$nameFile$extFileSave"
-        }else{
+        } else {
             val song = preferences.getJsonDataGetSong(downloadSong.id)
             extFileSave = song.ext
             nameFile = song.name
@@ -173,7 +186,7 @@ class MusicApiService(private val context: Context) {
     suspend fun finishDownload(id: Int): ResponseApi.Success<Boolean> {
         return this.executeService {
             val result = mService.deleteSong(id)
-            if(!result.isSuccessful) {
+            if (!result.isSuccessful) {
                 throw SongException(result.message())
             }
             val isDeleteSong = result.body()!!.data!!.isDelete
@@ -188,20 +201,32 @@ class MusicApiService(private val context: Context) {
     }
 
     @Throws
-    private suspend fun<T> executeService(lambda: suspend () -> T): T{
+    private suspend fun <T> executeService(lambda: suspend () -> T): T {
         try {
             return lambda()
         } catch (e: ConnectException) {
-            throw SongException("No se pudo conectar con el servidor", null, ResponseStatus.ERROR_CLIENT.ordinal)
+            throw SongException(
+                "No se pudo conectar con el servidor",
+                null,
+                ResponseStatus.ERROR_CLIENT.ordinal
+            )
         } catch (e: SocketTimeoutException) {
-            throw SongException("Se agoto el tiempo de espera", null, ResponseStatus.ERROR_CLIENT.ordinal)
+            throw SongException(
+                "Se agoto el tiempo de espera",
+                null,
+                ResponseStatus.ERROR_CLIENT.ordinal
+            )
         } catch (e: java.net.UnknownHostException) {
-            throw SongException("Ocurrio un error al conectar con el servicio",
+            throw SongException(
+                "Ocurrio un error al conectar con el servicio",
                 arrayListOf(
                     ErrorModel("enabled", "internet", "Necesita estar conectado a la red"),
-                    ErrorModel("enabled", "service", "Puede que el servicio este en mantenimiento pruebe mas tarde")
-                )
-                , ResponseStatus.ERROR_CLIENT.ordinal,
+                    ErrorModel(
+                        "enabled",
+                        "service",
+                        "Puede que el servicio este en mantenimiento pruebe mas tarde"
+                    )
+                ), ResponseStatus.ERROR_CLIENT.ordinal,
                 TypeError.INTERNET_OR_SERVER
             )
         }

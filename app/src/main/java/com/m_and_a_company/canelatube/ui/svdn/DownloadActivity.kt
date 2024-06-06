@@ -16,7 +16,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.airbnb.lottie.LottieDrawable
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -104,7 +103,7 @@ class DownloadActivity : AppCompatActivity(), OnSelectTypeDownload, DownloadForm
         super.onCreate(savedInstanceState)
         urlToDownload = intent.extras?.getString(Intent.EXTRA_TEXT) ?: ""
         binding = ActivityDownloadBinding.inflate(layoutInflater)
-        viewModel.viewState.observe(this, onChangeView)
+        viewModel.viewState.observe(this, ::render)
         setContentView(binding.root)
         requestPermissions()
         createSettingsIntent()
@@ -147,9 +146,8 @@ class DownloadActivity : AppCompatActivity(), OnSelectTypeDownload, DownloadForm
         }
     }
 
-    private val onChangeView = Observer<DownloadUIState> { state ->
-        loader.dismiss()
-        when (state) {
+    private fun render(state: DownloadUIState) {
+        when(state) {
             DownloadUIState.Loading -> {
                 loader.show()
                 bottomSheet.setOnDismissListener(null)
@@ -188,6 +186,7 @@ class DownloadActivity : AppCompatActivity(), OnSelectTypeDownload, DownloadForm
     }
 
     private fun setupDataInBottom(state: DownloadUIState.Success) {
+        loader.dismiss()
         bottomSheetBinding.apply {
             bsDownloadImageView.visibility = View.VISIBLE
             bsDownloadTitleAuthorTv.text = state.musicDownloadsModel.title

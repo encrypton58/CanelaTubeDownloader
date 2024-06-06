@@ -1,5 +1,7 @@
 package com.m_and_a_company.canelatube.domain.repository.song
 
+import com.m_and_a_company.canelatube.core.daison.DaisonResponseService
+import com.m_and_a_company.canelatube.core.daison.ResultSet
 import com.m_and_a_company.canelatube.domain.data.models.DownloadSong
 import com.m_and_a_company.canelatube.domain.network.interfaces.DownloadFinishedListener
 import com.m_and_a_company.canelatube.domain.network.model.MusicDownloadsModel
@@ -11,7 +13,7 @@ interface SongsDataSource {
 
     suspend fun getSongs(): ResponseApi.Success<List<Song>>
 
-    suspend fun getInfoSongFromUrl(url: String): ResponseApi.Success<MusicDownloadsModel>
+    suspend fun getInfoSongFromUrl(url: String): DaisonResponseService<ResultSet<MusicDownloadsModel>>
 
     suspend fun getIdSong(url: String, iTag: Int): ResponseApi.Success<SongIdModel>
 

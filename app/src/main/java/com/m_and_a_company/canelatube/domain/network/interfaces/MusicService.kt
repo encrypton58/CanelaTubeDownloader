@@ -1,5 +1,6 @@
 package com.m_and_a_company.canelatube.domain.network.interfaces
 
+import com.m_and_a_company.canelatube.core.daison.ResultSet
 import com.m_and_a_company.canelatube.domain.network.ID_URL_PARAM
 import com.m_and_a_company.canelatube.domain.network.ITAG_PARAM
 import com.m_and_a_company.canelatube.domain.network.PREFIX_DELETE_SONG_DOWNLOAD
@@ -26,7 +27,7 @@ interface MusicService {
     suspend fun getSongs(): Response<ResponseApi.Success<List<Song>>>
 
     @GET(PREFIX_GET_FORMATS_URL)
-    suspend fun getMusic(@Query(URL_PARAM) url: String): Response<ResponseApi.Success<MusicDownloadsModel>>
+    suspend fun getMusic(@Query(URL_PARAM) url: String): Response<ResultSet<MusicDownloadsModel>>
 
     @POST(PREFIX_GET_FORMATS_URL)
     @FormUrlEncoded
