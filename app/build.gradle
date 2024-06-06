@@ -30,7 +30,7 @@ android {
     productFlavors {
 
         pruebas {
-            buildConfigField 'String' , 'base_url', '"https://canelatube.alwaysdata.net/api/v1/"'
+            buildConfigField 'String' , 'base_url', '"http://192.168.1.158:5858/api/v1/"'
             versionNameSuffix "-testApp"
         }
 
